@@ -26,7 +26,7 @@ function Navbar() {
               </ul>
             </div>
             <div>
-              <button className='bg-orange-700 h-10 rounded-lg py-4 px-3.5 text-white text-sm font-black hidden md:flex items-center'>Login</button>
+              <button className='bg-orange-600 h-10 rounded-lg py-4 px-3.5 text-white text-sm font-black hidden md:flex items-center'>Login</button>
             </div>
             <div className='md:hidden flex items-center'>
               <button onClick={toggleMenu}>
