@@ -13,7 +13,7 @@ function Hero() {
           </button>
         </div>
         <div className='flex items-center justify-center self-stretch md:w-3/4'>
-          <img className='rounded' src="Hero.png" alt="" srcset="" />
+          <img className='rounded' src="Hero.png" alt="" srcSet="" />
         </div>
       </div>
     </>

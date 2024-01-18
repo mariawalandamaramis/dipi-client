@@ -4,7 +4,7 @@ const Cardinovasi = () => {
   return (
     <>
       <div className='border-2 rounded-xl'>
-        <img className='object-cover h-40 w-full rounded-t-xl' src="Hero.png" alt="" srcset="" />
+        <img className='object-cover h-40 w-full rounded-t-xl' src="Hero.png" alt="" srcSet="" />
         <div className='flex flex-col gap-8 px-6 py-5'>
           <div className='flex flex-col gap-2'>
             <p className='text-base font-thin underline'>Kerajinan</p>
@@ -17,7 +17,7 @@ const Cardinovasi = () => {
           </div>
         </div>
         <div className='flex bg-green-900 text-white gap-1 px-6 py-3 rounded-b-xl'>
-          <img src="PinMap.svg" alt="" srcset="" />
+          <img src="PinMap.svg" alt="" srcSet="" />
           <p className='text-base font-normal'>Palopo, Sulawesi Selatan</p>
         </div>
       </div>
