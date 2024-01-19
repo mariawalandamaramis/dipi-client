@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 function Navbar() {
 
@@ -16,14 +17,14 @@ function Navbar() {
         <nav className='bg-white flex justify-between items-center border-b-2 p-6 md:px-20 lg:px-40'>
 
           <div>
-            <img className='w-20 md:w-44' src="LOGODIPI.png" alt="" srcSet="" />
+            <Link to="/"><img className='w-20 md:w-44' src="LOGODIPI.png" alt="" srcSet="" /></Link>
           </div>
 
           <div className='flex justify-between items-center gap-x-8'>
             <div className='hidden md:flex items-center text-base font-semibold'>
               <ul className='flex gap-x-6'>
-                <li>Daftar Inovasi Aktif</li>
-                <li>Ajukan Inovasi</li>
+                <li><NavLink to="/listpage">Daftar Inovasi</NavLink></li>
+                <li><NavLink to="/">Ajukan Inovasi</NavLink></li>
               </ul>
             </div>
             <div>
