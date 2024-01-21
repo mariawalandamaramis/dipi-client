@@ -2,15 +2,20 @@ import React, { useState } from 'react'
 import Formstep1 from './Formstep1'
 import Formstep2 from './Formstep2'
 import Formstep3 from './Formstep3'
+import { useDispatch, useSelector } from 'react-redux'
+import { getValueFormPengajuan } from '../../redux/slice/inovasi-slice'
 
 const Forminovasi = () => {
   const FormArray = [1, 2, 3]
   const [FormNo, setFormNo] = useState(FormArray[0])
 
+  const dispatch = useDispatch()
   const nextStep = () => {
     if (FormNo === FormArray.length) {
       // Handle form submission logic here
-      alert('Form submitted!');
+
+      dispatch(getValueFormPengajuan(stateLocalMOM))
+      alert(JSON.stringify(stateLocalMOM, null, 2));
     } else {
       setFormNo(FormNo + 1);
     }
@@ -19,6 +24,41 @@ const Forminovasi = () => {
   const prevStep = () => {
     setFormNo(FormNo - 1)
   }
+
+  // const inovasiState = useSelector((state) => state.inovasi)
+  // console.log(inovasiState)
+
+  const [stateLocalMOM, setStateLocalMOM] = useState({
+    judul_inovasi: '',
+    deskripsi_singkat: '',
+    lokasi_kota: '',
+    lokasi_propinsi: '',
+    alamat: '',
+    kategori_inovasi: '',
+    foto_pendukung: '',
+    video_pendukung: '',
+    jml_pengajuan_dana: '',
+    durasi_kampanye: '',
+    detail_inovasi: '',
+    dana_suvenir1: '',
+    bentuk_suvenir1: '',
+    dana_suvenir2: '',
+    bentuk_suvenir2: '',
+    dana_suvenir3: '',
+    bentuk_suvenir3: '',
+  })
+
+  const handleInput = (e) => {
+    setStateLocalMOM({ ...stateLocalMOM, [e.target.name] : e.target.value})
+  }
+  // const handleInput3 = (editor, name) => {
+  //   const content = editor?.getText?.();
+  //   setStateLocalMOM((prev) => ({ ...prev, [name]: content }));
+  // };
+
+  //console.log(stateLocalMOM)
+
+  console.log(useSelector((state) => state.inovasi))
 
   return (
     <>
@@ -50,9 +90,9 @@ const Forminovasi = () => {
             </div>
 
             <div className='border-t pt-12'>
-              {FormNo === 1 && <Formstep1 />}
-              {FormNo === 2 && <Formstep2 />}
-              {FormNo === 3 && <Formstep3 />}
+              {FormNo === 1 && <Formstep1 stateLocalMOM={stateLocalMOM} handleInput={handleInput} />}
+              {FormNo === 2 && <Formstep2 stateLocalMOM={stateLocalMOM} handleInput={handleInput} />}
+              {FormNo === 3 && <Formstep3 stateLocalMOM={stateLocalMOM} handleInput={handleInput} />}
             </div>
           </div>
 

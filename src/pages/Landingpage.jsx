@@ -13,7 +13,13 @@ const Landingpage = () => {
   return (
     <>
       <Navbar />
-      <Hero />
+      <Hero
+        title='Dukung Perempuan Indonesia Mewujudkan Inovasinya'
+        desc='Indonesia memiliki banyak perempuan hebat dengan inovasi unik, kreativitas tinggi, dan orientasi pada solusi. Namun, untuk mewujudkan inovasi-inovasi tersebut, para perempuan membutuhkan dukungan dari kita semua.'
+        imgSrc='Hero.png'
+        btnText='Jelajah Inovasi'
+        btnShow={true}
+      />
       <Feature />
       <Spillcardinovasi />
       <Calltoaction />

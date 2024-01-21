@@ -1,7 +1,6 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 
-const Feature3 = () => {
+const Feature3 = ({ onButtonClick }) => {
     return (
         <>
             <div className='bg-white p-6 md:px-20 lg:px-40 lg:py-20'>
@@ -20,12 +19,10 @@ const Feature3 = () => {
                         <p className='text-sm font-normal'>Ceritakan ide inovasimu dengan baik agar pengajuanmu tepat disetujui. Pastikan ceritamu mudah dipahami sehingga banyak pendukung yang memilih inovasimu.</p>
                     </div>
                 </div>
-                <Link to={'ajukaninovasi-form'}>
-                    <button className='bg-green-900 h-10 rounded-lg py-4 px-3.5 text-white text-sm font-black flex items-center justify-center mx-auto gap-3'>
-                        <p>Mulai Berinovasi</p>
-                        <img src="Arrow-right.svg" alt="" />
-                    </button>
-                </Link>
+                <button onClick={onButtonClick} className='bg-green-900 h-10 rounded-lg py-4 px-3.5 text-white text-sm font-black flex items-center justify-center mx-auto gap-3'>
+                    <p>Mulai Berinovasi</p>
+                    <img src="Arrow-right.svg" alt="" />
+                </button>
             </div>
         </>
     )
