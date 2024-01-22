@@ -60,6 +60,16 @@ const Detail4 = () =>{
         batok kelapa memiliki kapasitas yang terbatas. Dalam 1 kali produksi,
         hanya bisa dihasilkan 50 helm.
       </div>
+      <div className="text-emerald-900 text-2xl font-extrabold leading-7 w-full mt-9 max-md:max-w-full">
+        Mendukung helm batok kelapa = menghargai para pekerja seni{" "}
+      </div>
+      <div className="text-emerald-900 text-lg leading-7 w-full mt-9 max-md:max-w-full">
+        Kami percaya bahwa pekerja seni adalah nafas dari sebuah inovasi. Helm
+        batok kelapa menjadi salah satu inovasi pekerja seni memberikan sebuah
+        tren baru yang unik dan ramah lingkungan. Dukunganmu memberikan semangat
+        untuk para pekerja seni. Terimakasih.
+      </div>
+
     </span>
   );
 }
