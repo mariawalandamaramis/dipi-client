@@ -10,12 +10,12 @@ const Spillcardinovasi = () => {
           <p className='text-base font-normal'>Mulailah berkontribusi dengan mendukung inovasi pilihanmu</p>
         </div>
         <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5'>
-          <Cardinovasi />
-          <Cardinovasi />
-          <Cardinovasi />
-          <Cardinovasi />
-          <Cardinovasi />
-          <Cardinovasi />
+          <Cardinovasi addLocation={true}/>
+          <Cardinovasi addLocation={true}/>
+          <Cardinovasi addLocation={true}/>
+          <Cardinovasi addLocation={true}/>
+          <Cardinovasi addLocation={true}/>
+          <Cardinovasi addLocation={true}/>
         </div>
         <button className='bg-orange-600 h-10 w-fit rounded-lg py-4 px-3.5 text-white text-sm font-black flex items-center justify-center gap-3'>
           <p>Cari Inovasi Lainnya</p>
