@@ -1,6 +1,42 @@
 import React from 'react'
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
+import { Bar } from 'react-chartjs-2';
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const Dashboard = () => {
+
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'bottom',
+        align: 'center',
+      },
+      title: {
+        display: false,
+        text: 'Chart.js Bar Chart',
+      },
+    },
+  };
+
+  const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
+
+  const data = {
+    labels,
+    datasets: [
+      {
+        label: 'Pemasukan',
+        data: [10, 20, 90, 50, 10, 20, 90,],
+        backgroundColor: '#60a5fa',
+      },
+      {
+        label: 'Pengeluaran',
+        data: [20, 40, 10, 40, 20, 90, 100],
+        backgroundColor: '#4ade80',
+      },
+    ],
+  };
+
   return (
     <>
       <div className='flex flex-col gap-6'>
@@ -8,7 +44,7 @@ const Dashboard = () => {
         <h2 className='text-4xl font-semibold'>Dashboard</h2>
 
         {/* isi kontentennya : char bar -laporan - inof terbaru */}
-        <div className='grid grid-cols-1 md:grid-cols-3 md:grid-rows-2'>
+        <div className='grid grid-cols-1 md:grid-cols-3 md:grid-rows-2 h-[500px] mb-28'>
 
           {/* laporan keuangan */}
           <div className='p-6 flex flex-col gap-8 md:col-span-2'>
@@ -84,6 +120,10 @@ const Dashboard = () => {
             <div className='flex gap-4 border rounded-lg'>
               <div className='w-4 rounded bg-orange-600'></div>
               <h3 className='text-xl font-semibold p-1'>Statistik Inovasi dan Dukungan</h3>
+            </div>
+
+            <div>
+              <Bar options={options} data={data} />
             </div>
           </div>
 
