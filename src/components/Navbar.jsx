@@ -15,15 +15,15 @@ function Navbar() {
 
         <nav className='bg-white flex justify-between items-center border-b-2 p-6 md:px-20 lg:px-40'>
 
-          <div>
-            <img className='w-20 md:w-44' src="LOGODIPI.png" alt="" srcset="" />
-          </div>
+          <Link to={'/'}>
+            <div><img className='w-20 md:w-44' src="LOGODIPI.png" alt="" srcset="" /></div>
+          </Link>
 
           <div className='flex justify-between items-center gap-x-8'>
             <div className='hidden md:flex items-center text-base font-semibold'>
               <ul className='flex gap-x-6'>
                 <li>Daftar Inovasi Aktif</li>
-                <Link to={'/ajukaninovasi'}><li>Ajukan Inovasi</li></Link>
+                <Link to={'/ajukaninovasi'}><li className='hover:underline underline-offset-8'>Ajukan Inovasi</li></Link>
               </ul>
             </div>
             <div>

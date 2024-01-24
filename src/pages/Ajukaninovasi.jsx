@@ -17,7 +17,7 @@ const Ajukaninovasi = () => {
           <Hero
             title='Buat Inovasimu Jadi Kenyataan'
             desc='Tunjukan potensi dan peluang setiap inovasimu. Ajukan sekarang dan dapatkan banyak dukungan!'
-            imgSrc='Hero.png'
+            imgSrc='AjukanInovasi.jpg'
             btnShow={false}
           />
           <Feature3 onButtonClick={handleButtonClick} />
