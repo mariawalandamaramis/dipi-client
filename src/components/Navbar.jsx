@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 function Navbar() {
 
@@ -22,7 +23,7 @@ function Navbar() {
           <div className='flex justify-between items-center gap-x-8'>
             <div className='hidden md:flex items-center text-base font-semibold'>
               <ul className='flex gap-x-6'>
-                <li>Daftar Inovasi Aktif</li>
+                <Link to={'/listpage'}><li className='hover:underline underline-offset-8'>Daftar Inovasi Aktif</li></Link>
                 <Link to={'/ajukaninovasi'}><li className='hover:underline underline-offset-8'>Ajukan Inovasi</li></Link>
               </ul>
             </div>
