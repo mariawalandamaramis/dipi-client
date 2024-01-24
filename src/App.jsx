@@ -1,6 +1,7 @@
 import React from 'react'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import Landingpage from './pages/Landingpage'
+import Ajukaninovasi from './pages/Ajukaninovasi'
 import LayoutDashboard from './components/layoutdashboard/LayoutDashboard'
 import Dashboard from './pages/Dashboard'
 import DashoardInovasiku from './pages/DashoardInovasiku'
@@ -13,6 +14,7 @@ const App = () => {
       <Router>
         <Routes>
           <Route path='/' element={<Landingpage />} />
+          <Route path='/ajukaninovasi' element={<Ajukaninovasi />} />
           <Route path='/dashboard' element={<LayoutDashboard />} > 
             <Route index element={<Dashboard />} />
             <Route path='inovasiku' element={<DashoardInovasiku />} />

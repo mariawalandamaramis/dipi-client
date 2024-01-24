@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
 
 function Navbar() {
 
@@ -22,7 +23,7 @@ function Navbar() {
             <div className='hidden md:flex items-center text-base font-semibold'>
               <ul className='flex gap-x-6'>
                 <li>Daftar Inovasi Aktif</li>
-                <li>Ajukan Inovasi</li>
+                <Link to={'/ajukaninovasi'}><li>Ajukan Inovasi</li></Link>
               </ul>
             </div>
             <div>
