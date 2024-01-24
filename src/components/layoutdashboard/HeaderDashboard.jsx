@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 const HeaderDashboard = ({ openMenu, toggleMenu }) => {
   return (
@@ -11,9 +12,9 @@ const HeaderDashboard = ({ openMenu, toggleMenu }) => {
                 {openMenu ? (<img src="/Close.svg" alt="" srcset="" />) : (<img src="/Menu.svg" alt="" srcset="" />)}
               </button>
             </div>
-            <div>
-              <img className='w-24 md:w-32' src="/LOGODIPI.png" alt="" srcset="" />
-            </div>
+            <Link to={'/'}>
+              <div><img className='w-24 md:w-32' src="LOGODIPI.png" alt="" srcset="" /></div>
+            </Link>
           </div>
           <div className='flex items-center gap-2'>
             <div className='w-10 md:w-10 h-10 md:h-10'>
