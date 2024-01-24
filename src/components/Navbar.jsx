@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link } from "react-router-dom";
 
 function Navbar() {
 
@@ -27,11 +27,11 @@ function Navbar() {
               </ul>
             </div>
             <div>
-              <button className='bg-orange-600 h-10 rounded-lg py-4 px-3.5 text-white text-sm font-black hidden md:flex items-center'>Login</button>
+              <button className='bg-orange-600 h-10 rounded-lg py-4 px-3.5 text-white text-sm font-black hidden md:flex items-center'><Link to="/login">Login</Link></button>
             </div>
             <div className='md:hidden flex items-center'>
               <button onClick={toggleMenu}>
-                {openMenu ? (<img src="Close.svg" alt="" srcset="" />) : (<img src="Menu.svg" alt="" srcset="" />)}
+                {openMenu ? (<img src="Close.svg" alt="" srcSet="" />) : (<img src="Menu.svg" alt="" srcSet="" />)}
               </button>
             </div>
           </div>

@@ -116,8 +116,8 @@ const Imagecarausel = () => {
           </div>
 
           <div className='absolute top-10 sm:top-1/2 flex justify-between w-full p-6 md:px-20 lg:px-40'>
-            <button onClick={() => handleLeftClick()} className='flex justify-center items-center rounded-lg p-2 bg-green-950'><img src="Chevron-left.svg" alt="" srcset="" /></button>
-            <button onClick={() => handleRightClikc()} className='flex justify-center items-center rounded-lg p-2 bg-green-950'><img src="Chevron-right.svg" alt="" srcset="" /></button>
+            <button onClick={() => handleLeftClick()} className='flex justify-center items-center rounded-lg p-2 bg-green-950'><img src="Chevron-left.svg" alt="" srcSet="" /></button>
+            <button onClick={() => handleRightClikc()} className='flex justify-center items-center rounded-lg p-2 bg-green-950'><img src="Chevron-right.svg" alt="" srcSet="" /></button>
           </div>
 
 
