@@ -1,6 +1,6 @@
+import Cookies from 'js-cookie';
 import React, { useState } from 'react'
 import { Link } from "react-router-dom";
-import { NavLink } from "react-router-dom";
 
 function Navbar() {
 
@@ -9,6 +9,9 @@ function Navbar() {
   const toggleMenu = () => {
     setOpenMenu(!openMenu)
   }
+
+ // const isToken = JSON.parse(Cookies.get('responLogin')).token
+  // console.log(isToken)
 
   return (
     <>
@@ -27,9 +30,21 @@ function Navbar() {
                 <Link to={'/ajukaninovasi'}><li className='hover:underline underline-offset-8'>Ajukan Inovasi</li></Link>
               </ul>
             </div>
-            <div>
-              <button className='bg-orange-600 h-10 rounded-lg py-4 px-3.5 text-white text-sm font-black hidden md:flex items-center'><Link to="/login">Login</Link></button>
-            </div>
+            {
+              Cookies.get('responLogin') ? (
+                <Link to={'/dashboard'}>
+                  <div className='w-10 md:w-10 h-10 md:h-10'>
+                    <img className='w-full h-full rounded-full object-cover' src="/Hero.png" alt="" srcset="" />
+                  </div>
+                </Link>
+              ) : (
+                <Link to="/login">
+                  <div>
+                    <button className='bg-orange-600 h-10 rounded-lg py-4 px-3.5 text-white text-sm font-black hidden md:flex items-center'>Login</button>
+                  </div>
+                </Link>
+              )
+            }
             <div className='md:hidden flex items-center'>
               <button onClick={toggleMenu}>
                 {openMenu ? (<img src="Close.svg" alt="" srcSet="" />) : (<img src="Menu.svg" alt="" srcSet="" />)}

@@ -1,5 +1,5 @@
 import React from 'react'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom'
 import Landingpage from './pages/Landingpage'
 import Ajukaninovasi from './pages/Ajukaninovasi'
 import LayoutDashboard from './components/layoutdashboard/LayoutDashboard'
@@ -12,21 +12,36 @@ import LoginRegisterForm from './pages/LoginRegisterForm'
 import SignUpForm from './pages/SignUpForm'
 import DetailPageInovasi from './pages/DetailPageInovasi'
 import ListPageInovasi from './pages/ListPageInovasi'
+import Cookies from 'js-cookie'
 
 
 
 const App = () => {
+
+  // jika sudah Login, maka tidak bisa akses router ...
+  const AlreadyLogin = (props) => {
+    if (Cookies.get('responLogin') === undefined) { return props.children }
+    else if (Cookies.get('responLogin') !== undefined) { return <Navigate to={'/'} /> }
+  }
+
+  // jika belum login, maka tidak bisa akses router ...
+  const NotLogin = (props) => {
+    if (Cookies.get('responLogin') === undefined) { return <Navigate to={'/'} /> }
+    else if (Cookies.get('responLogin') !== undefined) { return props.children }
+  }
+
+
   return (
     <>
       <Router>
         <Routes>
           <Route path='/' element={<Landingpage />} />
-          <Route path='/login' element={<LoginRegisterForm />} />
-          <Route path='/signup' element={<SignUpForm />} />
+          <Route path='/login' element={<AlreadyLogin><LoginRegisterForm /></AlreadyLogin>} />
+          <Route path='/signup' element={<AlreadyLogin><SignUpForm /></AlreadyLogin>} />
           <Route path='/detailpage' element={<DetailPageInovasi />} />
           <Route path='/listpage' element={<ListPageInovasi />} />
           <Route path='/ajukaninovasi' element={<Ajukaninovasi />} />
-          <Route path='/dashboard' element={<LayoutDashboard />} > 
+          <Route path='/dashboard' element={<NotLogin><LayoutDashboard /></NotLogin>} >
             <Route index element={<Dashboard />} />
             <Route path='inovasiku' element={<DashoardInovasiku />} >
               <Route path=':id' element={<DashoardInovasiku_update />} />
