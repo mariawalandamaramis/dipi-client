@@ -3,6 +3,7 @@ import inovasiSlice from "./slice/inovasi-slice";
 import loginSlice from "./slice/login-slice";
 
 
+
 const store = configureStore({
     reducer: {
         inovasi: inovasiSlice,

@@ -1,79 +1,56 @@
 import { createSlice } from "@reduxjs/toolkit";
 import Cookies from "js-cookie";
-// import { redirect } from "react-router-dom";
 
 const loginSlice = createSlice({
     name: 'login',
     initialState: {
-        login: [], // dibuat array biar bisa ngecek apakah udh ada data loginnya / blm 
-        msgIncorret : []
+        responLogin : {},
+        messageErro : {}
     },
 
     reducers: {
-        userLogin(state, action) {
-            state.login = action.payload
+
+        // ini untuk test aja, jgn dipake buat get inputan
+        getResponInput(state, action) {
+            state.responLogin = action.payload
         },
-        incorretData(state, action) {
-            state.msgIncorret = action.payload
-        },
-        resetIncorretData(state) {
-            state.msgIncorret = [];
-          },
+
+        responMessage(state,action) {
+            state.messageErro = action.payload
+        }
     }
 })
 
-export const { userLogin, incorretData, resetIncorretData } = loginSlice.actions
-
-export const postUserLogin = (loginData) => async (dispatch) => {
+export const postInputToAPI = (data) => async (dispatch) => {
     try {
-        const response = await fetch('http://localhost:3000/users/login', {
+        const postRespon = await fetch('http://localhost:3000/users/login', {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(loginData)
+            body: JSON.stringify(data)
         })
 
-        if (response.ok) {
-            const responData = await response.json()
-            //alert(`login berhasil : ${JSON.stringify(responData)}`)
+        if (postRespon.ok) {
+            const responAPI = await postRespon.json();
+            const convertResponAPI = JSON.stringify(responAPI)
+            const convertParseResponAPI = JSON.parse(convertResponAPI)
+            Cookies.set('responLogin', convertResponAPI)
+            dispatch(getResponInput(convertParseResponAPI))
 
-            const responJson = JSON.stringify(responData)
-            // console.log(responJson)
-
-            // dispatch(userLogin(responData))
-
-            Cookies.set('responLogin', responJson)
-
-            const cook = Cookies.get('responLogin')
-            const goGlobal = JSON.parse(cook)
-
-            // console.log(goGlobal)
-
-            dispatch(userLogin(goGlobal))
-            
-
-            // alert('berhasil')
-
-
-
-            // return redirect('/')
-            
-
-            // const userToken = responData.token
-            // Cookies.set('token', userToken, {expires: 1})
         } else {
-            const erroData = await response.json()
-            const msgError = JSON.stringify(erroData)
-            const msgErr = JSON.parse(msgError)
-            console.log(msgErr)
-            //dispatch(incorretData(msgErr))
-            //alert("Gagal login: " + msgErr.message)
+            const responAPIerr = await postRespon.json();
+            const convertResponAPIerr = JSON.stringify(responAPIerr);
+            const convertParseResponAPIerr = JSON.parse(convertResponAPIerr)
+
+            dispatch(responMessage(convertParseResponAPIerr))
         }
-    } catch (error) {
-        alert('eror di poastUSerlogin')
+
+
+    } catch(error) {
+        alert('error ga bisa fetch API')
     }
 }
 
-
 export default loginSlice.reducer
+export const { getResponInput, responMessage } = loginSlice.actions
