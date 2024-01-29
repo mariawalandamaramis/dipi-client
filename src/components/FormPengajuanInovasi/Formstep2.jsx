@@ -2,63 +2,28 @@ import React, { useEffect, useState } from 'react'
 import ReactQuill from 'react-quill'
 import "react-quill/dist/quill.snow.css"
 import Fromeditortoolbar, { modules, formats } from './Formeditortoolbar'
-// import { useDispatch, useSelector } from 'react-redux'
-// import { getValueForm } from '../../redux/slice/inovasi-slice'
 
-const Formstep2 = ({ stateLocalMOM, handleInput }) => {
-	//const dispatch = useDispatch()
+const Formstep2 = ({ register, watch, setValue, errors, formSubmitted  }) => {
 	const [editorContent, setEditorContent] = useState('')
-
-	// useEffect(() => {
-	// 	// Pastikan bahwa stateLocalMOM dan stateLocalMOM.detail_inovasi tidak null atau undefined
-	// 	if (stateLocalMOM && stateLocalMOM.detail_inovasi !== undefined) {
-	// 	  setEditorContent(stateLocalMOM.detail_inovasi);
-	// 	}
-	//   }, [stateLocalMOM]); // Ubah dependensi menjadi [stateLocalMOM]
-
-
 	const [showContent, setShowContent] = useState(false)
 	const handleViewContonet = () => { setShowContent(!showContent) }
 
+	useEffect(() => {
+		register("description", {
+			required: "isi detail dulu",
+		})
+	}, [register])
+
 	const handleEditorChange = (content) => {
+		//console.log(content)
+		setValue("description", content)
 		setEditorContent(content)
-
-		handleInput({
-			target: {
-				name: 'detail_inovasi',
-				value: content,
-			},
-		});
-
-		// stateLocalMOM((prevState) => ({
-		// 	...prevState,
-		// 	detail_inovasi: content,
-		// }))
-
-		// if (editorContent !== "") {
-		// 	dispatch(getValueForm({form: 'form2', value: stateLocal }))
-		// }
-
 	}
 
-
-	// const stateLocal = {detail_inovasi : editorContent}
-	// // const handleNotFocus = () => { 
-	// // 	if (editorContent !== "") {
-	// // 		dispatch(getValueForm({form: 'form2', value: stateLocal }))
-	// // 	}
-	// // } 
-
-	// // console.log(editorContent)
-
-	// // console.log(useSelector((state) => state.inovasi))
+	const contentValue = watch("description")
 
 	return (
 		<>
-			<div className='mb-8'>
-				<h2 className='text-2xl font-bold'>Ceritakan Lebih Detail Inovasimu ?</h2>
-				<p className='text-lg font-normal'>Buatlah penjelasan secara detail dari pengajuan inovasimu</p>
-			</div>
 			<div className='flex flex-col'>
 				<label className='text-lg font-medium mb-2' htmlFor="">Detail Inovasi</label>
 				<Fromeditortoolbar toolbarId={'t1'} />
@@ -69,20 +34,12 @@ const Formstep2 = ({ stateLocalMOM, handleInput }) => {
 					formats={formats}
 					onChange={handleEditorChange}
 					className='h-96'
-					value={stateLocalMOM.detail_inovasi}
-				// name='detail_inovasi'
-				// value={stateLocalMOM.detail_inovasi}
-				// onChange={(content, delta, source, editor) => handleInput3(editor, 'detail_inovasi')}
-				// id='detail_inovasi'
-				// name='detail_inovasi'
-				// value={stateLocalMOM.detail_inovasi}
-				// onChange={handleInput}
-				// onBlur={handleNotFocus}
+					value={contentValue}
 				/>
 
-
-
-
+				<div className={`${formSubmitted ? ('invisible'): ('visible')} text-red-500 text-xs font-semibold leading-5 mt-2 flex flex-row max-md:max-w-full`}>
+					{errors.description && <p>{errors.description.message}</p>}
+				</div>
 
 				<button onClick={handleViewContonet} className='bg-green-900 h-10 py-4 px-3.5 text-white text-sm font-semibold flex items-center justify-center gap-3'> {showContent ? 'Sembunyikan Hasil' : 'Lihat Hasil'} </button>
 				{

@@ -5,7 +5,7 @@ const Footer = () => {
     <>
       <div className='bg-white p-6 md:px-20 lg:px-40 lg:pt-12'>
         <div className='flex flex-col md:flex-row justify-between items-center mb-10 gap-4'>
-          <img className='w-2/6 md:w-1/6' src="LOGODIPI.png" alt="" srcSet="" />
+          <img className='w-2/6 md:w-1/6' src="/LOGODIPI.png" alt="" srcSet="" />
           <div>
             <ul className='flex gap-2 md:gap-4 text-base font-normal'>
               <li>Tentang Kami</li>
@@ -15,11 +15,11 @@ const Footer = () => {
           </div>
           <div>
             <ul className='flex gap-2'>
-              <li><img src="Facebook.svg" alt="" srcSet="" /></li>
-              <li><img src="Facebook.svg" alt="" srcSet="" /></li>
-              <li><img src="Facebook.svg" alt="" srcSet="" /></li>
-              <li><img src="Facebook.svg" alt="" srcSet="" /></li>
-              <li><img src="Facebook.svg" alt="" srcSet="" /></li>
+              <li><img src="/Facebook.svg" alt="" srcSet="" /></li>
+              <li><img src="/Facebook.svg" alt="" srcSet="" /></li>
+              <li><img src="/Facebook.svg" alt="" srcSet="" /></li>
+              <li><img src="/Facebook.svg" alt="" srcSet="" /></li>
+              <li><img src="/Facebook.svg" alt="" srcSet="" /></li>
             </ul>
           </div>
         </div>

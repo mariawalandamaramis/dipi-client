@@ -13,6 +13,7 @@ import SignUpForm from './pages/SignUpForm'
 import DetailPageInovasi from './pages/DetailPageInovasi'
 import ListPageInovasi from './pages/ListPageInovasi'
 import Cookies from 'js-cookie'
+import Ajukaninovasi_form from './pages/Ajukaninovasi_form'
 
 
 
@@ -41,6 +42,7 @@ const App = () => {
           <Route path='/detailpage' element={<DetailPageInovasi />} />
           <Route path='/listpage' element={<ListPageInovasi />} />
           <Route path='/ajukaninovasi' element={<Ajukaninovasi />} />
+          <Route path='/ajukaninovasi/form' element={<Ajukaninovasi_form/>} />
           <Route path='/dashboard' element={<NotLogin><LayoutDashboard /></NotLogin>} >
             <Route index element={<Dashboard />} />
             <Route path='inovasiku' element={<DashoardInovasiku />} >

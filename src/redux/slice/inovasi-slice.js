@@ -3,12 +3,23 @@ import { createSlice } from '@reduxjs/toolkit';
 const inovasiSlice = createSlice({
     name: 'inovasi',
     initialState: {
-        inovasi: {
-            // form1: {},
-            // form2: {},
-            // form3: {},
-        },
-        // inovasi: []
+        judul_inovasi: '',
+        deskripsi_singkat: '',
+        lokasi_kota: '',
+        lokasi_propinsi: '',
+        alamat: '',
+        kategori_inovasi: '',
+        foto_pendukung: '',
+        video_pendukung: '',
+        jml_pengajuan_dana: '',
+        durasi_kampanye: '',
+        detail_inovasi: '',
+        dana_suvenir1: '',
+        bentuk_suvenir1: '',
+        dana_suvenir2: '',
+        bentuk_suvenir2: '',
+        dana_suvenir3: '',
+        bentuk_suvenir3: '',
     },
 
     reducers: {
@@ -29,7 +40,7 @@ const inovasiSlice = createSlice({
             //     video_pendukung : action.payload.video_pendukung,
             //     jml_pengajuan_dana : action.payload.jml_pengajuan_dana,
             //     durasi_kampanye : action.payload.durasi_kampanye,
-                
+
             //     // isi form 2
             //     detail_inovasi : action.payload.detail_inovasi,
 
@@ -52,7 +63,7 @@ const inovasiSlice = createSlice({
             //     const form3 = [newInovasi]
             //     console.log(form3)
             // }
-            
+
             // console.log(newInovasi)
             // state.inovasi = [...state.inovasi, newInovasi]
             // state.inovasi = [newInovasi]
@@ -71,14 +82,14 @@ const inovasiSlice = createSlice({
             // console.log(ditampungdulu)
 
             // const formInput = action.payload
-        
+
             // console.log(formInput)
             // console.log(typeof(formInput))
 
             // const valueForm = formInput.find(item => item.form === 'form1').value
             // console.log('isis value form')
             // const valueForm = formInput.value
-            
+
             // const combineValue = {...state.inovasi, ...valueForm}
             // console.log('combine')
             // console.log(combineValue)

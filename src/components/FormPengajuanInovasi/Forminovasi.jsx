@@ -2,22 +2,129 @@ import React, { useState } from 'react'
 import Formstep1 from './Formstep1'
 import Formstep2 from './Formstep2'
 import Formstep3 from './Formstep3'
-import { useDispatch, useSelector } from 'react-redux'
-import { getValueFormPengajuan } from '../../redux/slice/inovasi-slice'
+import { useForm } from 'react-hook-form'
+import { uploadImageAPI, uploadInovasiAPI, uploadPackageDonate, uploadVideoAPI } from './uploaderAPI'
+import Cookies from 'js-cookie'
+
 
 const Forminovasi = () => {
   const FormArray = [1, 2, 3]
   const [FormNo, setFormNo] = useState(FormArray[0])
+  const [errInputFile, setErrInputFile] = useState({
+    image: '',
+    video: ''
+  })
+  const [canNext, setCanNext] = useState(false)
+  const [formSubmitted, setFormSubmitted] = useState(false);
+  const [dataFormImage, setDataFormImage] = useState({})
+  const [dataFormVideo, setDataFormVideo] = useState({})
+  const [dataInovation, setDataInovation] = useState({
+    inovation_name: '',
+    description: '',
+    duration: 0,
+    city_id: 1,
+    province_id: 1,
+    amount: 0,
+    category_id: 1,
+    image: '',
+    video: ''
+  })
+  const [dataSuvenir1, setDataSuvenir1] = useState({
+    inovation_id: 0,
+    package_name: 1,
+    nominal: 0,
+    description: ''
+  })
+  const [dataSuvenir2, setDataSuvenir2] = useState({
+    inovation_id: 0,
+    package_name: 2,
+    nominal: 0,
+    description: ''
+  })
+  const [dataSuvenir3, setDataSuvenir3] = useState({
+    inovation_id: 0,
+    package_name: 3,
+    nominal: 0,
+    description: ''
+  })
 
-  const dispatch = useDispatch()
-  const nextStep = () => {
+
+  const nextStep = async () => {
+    setFormSubmitted(false);
+    let isValid = false
+    switch (FormNo) {
+      case 1:
+        isValid = await trigger(['inovation_name', 'description_short', 'city', 'province', 'category', 'image', 'video', 'amount', 'duration'])
+        break;
+      case 2:
+        isValid = await trigger(['description'])
+        break;
+      case 3:
+        isValid = await trigger(['nominal1', 'suvenir1', 'nominal2', 'suvenir2', 'nominal3', 'suvenir3'])
+    }
+
+
     if (FormNo === FormArray.length) {
-      // Handle form submission logic here
 
-      dispatch(getValueFormPengajuan(stateLocalMOM))
-      alert(JSON.stringify(stateLocalMOM, null, 2));
+      // cek apakah valid ? jika valid alert // post API
+      if (isValid) {
+        alert('Ajukan Inovasi ?')
+
+        uploadImageAPI(dataFormImage)
+        uploadVideoAPI(dataFormVideo)
+
+        const dataImage = Cookies.get('dataImage')
+        const dataVideo = Cookies.get('dataVideo')
+
+        const parsedDataImage = JSON.parse(dataImage);
+        const parsedDataVideo = JSON.parse(dataVideo);
+
+        setDataInovation((prevData) => ({
+          ...prevData,
+          image: parsedDataImage?.data || '',
+          video: parsedDataVideo?.data || '',
+        }));
+
+        uploadInovasiAPI(dataInovation)
+
+        const dataInovationAPI = Cookies.get('dataInovasi')
+        const parseDataInovationAPI = JSON.parse(dataInovationAPI)
+
+        setDataSuvenir1((prevData) => ({...prevData, inovation_id: parseDataInovationAPI.id}))
+        setDataSuvenir2((prevData) => ({...prevData, inovation_id: parseDataInovationAPI.id}))
+        setDataSuvenir3((prevData) => ({...prevData, inovation_id: parseDataInovationAPI.id}))
+
+        uploadPackageDonate(dataSuvenir1)
+        uploadPackageDonate(dataSuvenir2)
+        uploadPackageDonate(dataSuvenir3)
+
+        alert('inovasi sudah diajukan')
+
+        // Handle form submission logic here
+
+        // post image dulu / video => url
+        // respon image masukin ke object yang akan di post createinovasi
+        // lalu post DonatePackage gunakan respon dari createinovasi untuk dapat idnya
+
+      }
+
     } else {
-      setFormNo(FormNo + 1);
+
+      if (errInputFile.image === '' && errInputFile.video === '') {
+        setCanNext(true)
+      } else {
+        setCanNext(false)
+      }
+
+      if (isValid && canNext) {
+        setFormNo(FormNo + 1);
+      }
+
+      if (FormNo === 3) {
+        handleSubmit(onSubmit)
+      }
+
+      handleSubmit(onSubmit)()
     }
   };
 
@@ -25,40 +132,85 @@ const Forminovasi = () => {
     setFormNo(FormNo - 1)
   }
 
-  // const inovasiState = useSelector((state) => state.inovasi)
-  // console.log(inovasiState)
-
-  const [stateLocalMOM, setStateLocalMOM] = useState({
-    judul_inovasi: '',
-    deskripsi_singkat: '',
-    lokasi_kota: '',
-    lokasi_propinsi: '',
-    alamat: '',
-    kategori_inovasi: '',
-    foto_pendukung: '',
-    video_pendukung: '',
-    jml_pengajuan_dana: '',
-    durasi_kampanye: '',
-    detail_inovasi: '',
-    dana_suvenir1: '',
-    bentuk_suvenir1: '',
-    dana_suvenir2: '',
-    bentuk_suvenir2: '',
-    dana_suvenir3: '',
-    bentuk_suvenir3: '',
-  })
-
-  const handleInput = (e) => {
-    setStateLocalMOM({ ...stateLocalMOM, [e.target.name] : e.target.value})
+  const headerText = (head, desc) => {
+    return (
+      <>
+        <div className='mb-8'>
+          <h2 className='text-2xl font-bold'>{head}</h2>
+          <p className='text-lg font-normal'>{desc}</p>
+        </div>
+        {
+          FormNo === 3 && (
+            <div className='mb-8 flex bg-green-950 p-2 gap-2 rounded-lg items-start'>
+              <img src="/Lamp.svg" alt="" srcset="" />
+              <p className='text-sm italic text-white'>Pemberian suvenir bertujuan untuk menarik minat pendukung dan memberikan kesan spesial kepada pendukung. Tips : berikan souvenir yang bisa dikenang dan bermanfaat.</p>
+            </div>
+          )
+        }
+      </>
+    )
   }
-  // const handleInput3 = (editor, name) => {
-  //   const content = editor?.getText?.();
-  //   setStateLocalMOM((prev) => ({ ...prev, [name]: content }));
-  // };
 
-  //console.log(stateLocalMOM)
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    trigger,
+    getValues,
+    formState: { errors }
+  } = useForm()
 
-  console.log(useSelector((state) => state.inovasi))
+  const onSubmit = (data) => {
+    console.log(data.image)
+
+    setFormSubmitted(true);
+
+    if (!data.hasOwnProperty('image')) {
+      setErrInputFile(prevStep => ({ ...prevStep, image: 'Image pendukung harus diisi!' }))
+    } else {
+      setErrInputFile(prevStep => ({ ...prevStep, image: '' }))
+      setDataFormImage(data.image[0])
+    }
+
+    if (!data.hasOwnProperty('video')) {
+      setErrInputFile(prevStep => ({ ...prevStep, video: 'Video pendukung harus diisi!' }))
+    } else {
+      setErrInputFile(prevStep => ({ ...prevStep, video: '' }))
+      setDataFormVideo(data.video[0])
+    }
+
+    setDataInovation(prevData => ({
+      ...prevData,
+      inovation_name: data.inovation_name,
+      description: data.description,
+      duration: data.duration,
+      city_id: 1,
+      province_id: 1,
+      amount: data.amount,
+      category_id: 1,
+    }));
+
+    setDataSuvenir1(prevData => ({
+      ...prevData,
+      nominal: data.nominal1,
+      description: data.suvenir1
+    }))
+
+    setDataSuvenir2(prevData => ({
+      ...prevData,
+      nominal: data.nominal2,
+      description: data.suvenir2
+    }))
+
+    setDataSuvenir3(prevData => ({
+      ...prevData,
+      nominal: data.nominal3,
+      description: data.suvenir3
+    }))
+
+  }
+
 
   return (
     <>
@@ -90,20 +242,30 @@ const Forminovasi = () => {
             </div>
 
             <div className='border-t pt-12'>
-              {FormNo === 1 && <Formstep1 stateLocalMOM={stateLocalMOM} handleInput={handleInput} />}
-              {FormNo === 2 && <Formstep2 stateLocalMOM={stateLocalMOM} handleInput={handleInput} />}
-              {FormNo === 3 && <Formstep3 stateLocalMOM={stateLocalMOM} handleInput={handleInput} />}
+              {FormNo === 1 && headerText("Apa inovasimu ?", "Buatlah inovasimu mudah dipahami oleh para pendukung")}
+              {FormNo === 2 && headerText("Ceritakan Lebih Detail Inovasimu ?", "Buatlah penjelasan secara detail dari pengajuan inovasimu")}
+              {FormNo === 3 && headerText("Buat Pendukungmu Agar Tetap Terhubung", "Berikan suvernir sesuai dengan dukungan yang diberikan")}
+
+              <div>
+                <form id='formstepper' onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-4'>
+                  {/* step2nya disini */}
+                  {FormNo === 1 && <Formstep1 register={register} watch={watch} errors={errors} setValue={setValue} getValues={getValues} errInputFile={errInputFile} />}
+                  {FormNo === 2 && <Formstep2 register={register} watch={watch} setValue={setValue} errors={errors} formSubmitted={formSubmitted} />}
+                  {FormNo === 3 && <Formstep3 register={register} errors={errors} formSubmitted={formSubmitted} />}
+                </form>
+              </div>
+
             </div>
           </div>
 
           <div className='flex justify-between'>
             <button onClick={prevStep} className={`${FormNo > 1 ? '' : 'invisible'} bg-green-900 h-10 rounded-lg py-4 px-3.5 text-white text-sm font-semibold flex items-center justify-center gap-3`}>
-              <img className='rotate-180' src="Arrow-right.svg" alt="" />
+              <img className='rotate-180' src="/Arrow-right.svg" alt="" />
               <p>Kembali</p>
             </button>
-            <button onClick={nextStep} className='bg-green-900 h-10 rounded-lg py-4 px-3.5 text-white text-sm font-semibold flex items-center justify-center gap-3'>
+            <button form='formstepper' type='submit' onClick={nextStep} className={`bg-green-900 h-10 rounded-lg py-4 px-3.5 text-white text-sm font-semibold flex items-center justify-center gap-3`}>
               <p>{FormNo === FormArray.length ? 'Submit' : 'Selanjutnya'}</p>
-              <img src="Arrow-right.svg" alt="" />
+              <img src="/Arrow-right.svg" alt="" />
             </button>
           </div>
         </div>

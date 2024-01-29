@@ -58,7 +58,7 @@ function SignForm() {
           onSubmit={handleSubmit(onSubmit)}
           className="items-stretch border shadow-sm bg-white flex w-[639px] max-w-full flex-col mt-4 mb-32 px-5 py-10 rounded-xl border-solid border-white max-md:mb-10">
           <label className="text-emerald-900 text-lg font-medium leading-5 max-md:max-w-full">Nama</label>
-          <input type="text" {...register('nama', {
+          <input type="text" {...register('name', {
             required: 'Nama harus diisi !',
             onChange: clearMessageAPI,
           })}
