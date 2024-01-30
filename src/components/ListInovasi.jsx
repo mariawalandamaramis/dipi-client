@@ -1,42 +1,114 @@
-import React, {Component} from 'react';
+import React, { useEffect, useState } from 'react';
+import Cardinovasi from './Cardinovasi';
+import Select from 'react-select';
+
+// contoh API, nanti diganti
+// https://api.escuelajs.co/api/v1/products
+// https://api.escuelajs.co/api/v1/categories
 
 function ListInovasi() {
+  const [fakeData, setFakeData] = useState([])
+  const [fakeCategory, setFakeCategory] = useState([])
+  const [selectedCategory, setSelectedCategory] = useState(null)
+  const [selectSort, setSelectSort] = useState(null)
+
+  console.log(fakeData.sort((a, b) => new Date(b.price) - new Date(a.price))) // termahal --- contoh saja, nanti di hapus
+  console.log(fakeData.sort((a, b) => new Date(b.price) - new Date(a.price))) // termurah --- contoh saja, nanti di hapus
+
+
+  const CategoryOptions = fakeCategory.map((data) => ({
+    value: data.name,
+    label: data.name
+  }))
+
+  const resultFilterSelected = () => {
+    let filterData = [...fakeData];
+
+    if (selectSort && selectSort.value === 'terbaru') {
+      filterData = filterData.sort((a, b) => new Date(b.price) - new Date(a.price));
+    } else if (selectSort && selectSort.value === 'terlama') {
+      filterData = filterData.sort((a, b) => new Date(a.price) - new Date(b.price));
+    }
+
+    filterData = selectedCategory ? filterData.filter((data) => {
+      return data.category.name === selectedCategory.value;
+    }) : filterData;
+
+    return filterData;
+  };
+
+  const optionSort = [
+    { value: 'terbaru', label: 'terbaru' },
+    { value: 'terlama', label: 'terlama' },
+  ]
+
+  useEffect(() => {
+    fetch('https://api.escuelajs.co/api/v1/products')
+      .then((respone) => respone.json())
+      .then((data) => setFakeData(data));
+
+    fetch('https://api.escuelajs.co/api/v1/categories')
+      .then((respon) => respon.json())
+      .then((data) => setFakeCategory(data))
+  }, [])
+
   return (
+    <>
+      <div className='bg-green-900 flex flex-col gap-10 p-6 md:px-20 lg:px-40 lg:py-10'>
 
-    
-    <div className="items-center bg-emerald-900 flex flex-col justify-center px-16 py-10 max-md:px-5">
-      <span className="flex w-full max-w-[1106px] flex-col items-stretch max-md:max-w-full">
-        <div className="justify-between items-stretch flex w-full gap-5 max-md:max-w-full max-md:flex-wrap">
-          <span className="items-center flex justify-between gap-5 max-md:max-w-full max-md:flex-wrap">
-            <div className="text-white text-base font-semibold leading-6 grow whitespace-nowrap my-auto">
-              Filter
-            </div>
-            <span className="justify-between items-stretch border shadow-sm bg-white self-stretch flex gap-5 px-3 py-3.5 rounded-md border-solid border-orange-400">
-              <input className="text-orange-400 text-xs leading-5" placeholder='Kategori' />
-            </span>
-            <span className="justify-between items-stretch border shadow-sm bg-white self-stretch flex gap-5 px-3 py-3.5 rounded-md border-solid border-orange-400">
-              <input className="text-orange-400 text-xs leading-5" placeholder='Lokasi' />
-            </span>
-          </span>
-          <span className="items-center flex justify-between gap-5">
-            <div className="text-white text-base font-semibold leading-6 grow whitespace-nowrap my-auto">
-              <p>Urutan</p>
-            </div>
-            <select className="bg-gray-50 border border-gray-300 text-orange-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                <option selected>Inovasi Terbaru</option>
-                <option>Kerajinan Rumahan</option>
-                <option>Kerajinan Sanggar</option>
-                <option>Anak Jalanan</option>
-                <option>Batik Khas Solo</option>
+        <div className='flex justify-between sm:flex-row flex-col'>
+
+          <div className=' flex gap-6 items-center mb-6 sm:mb-0'>
+            <p className='text-base text-white font-semibold'>Filter</p>
+            <Select className="rounded-md text-xs w-full md:w-[140px] xl:w-[240px]"
+              options={CategoryOptions}
+              isClearable
+              placeholder='Kategori'
+              onChange={(selectOption) => setSelectedCategory(selectOption)}
+              value={selectedCategory}
+            />
+            <select className="rounded-md border-2 p-2 text-xs w-full md:w-[140px] xl:w-[240px]">
+              <option value="">Lokasi (kota)</option>
+              <option value="Palopo" >Palopo</option>
+              <option value="Sumedang" >Sumedang</option>
             </select>
+          </div>
 
-          </span>
+          <div className='flex gap-6 items-center'>
+            <p className='text-base text-white font-semibold'>Urutan</p>
+            <Select className="rounded-md text-xs w-full"
+              isClearable
+              placeholder='Inovasi terbaru'
+              options={optionSort}
+              onChange={(e) => setSelectSort(e)}
+            />
+          </div>
+
         </div>
-        <div className="text-white text-base font-semibold leading-6 mt-10 max-md:max-w-full">
-          Hasil : menampilakan 100 Inovasi
+
+        <p className='text-base text-white font-semibold'> Hasil : menampilkan {resultFilterSelected().length} Inovasi</p>
+
+      </div>
+
+      <div className='bg-white p-6 md:px-20 lg:px-40 lg:py-10 flex flex-col gap-10'>
+
+        <h3 className='text-2xl font-semibold'>Daftar Inovasi dari Perempuan Hebat</h3>
+
+        <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6'>
+          {resultFilterSelected().map((data) => (
+            <Cardinovasi
+              key={data.id}
+              addLocation={true}
+              image={data.images[0]}
+              category={data.category.name}
+              title={data.title}
+              time={data.price}
+            />
+          ))}
         </div>
-      </span>
-    </div>
+
+      </div>
+    </>
   );
 }
 
