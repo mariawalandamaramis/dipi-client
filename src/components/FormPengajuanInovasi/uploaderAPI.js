@@ -3,7 +3,7 @@ import Cookies from "js-cookie";
 export const uploadImageAPI = async (imgFile) => {
     try {
         const formData = new FormData();
-        formData.append("image", imgFile)
+        formData.append("file", imgFile, imgFile.name)
         const APIURL = "http://localhost:3000/inovation/uploadImage"
 
         const response = await fetch(APIURL, {
@@ -28,12 +28,12 @@ export const uploadImageAPI = async (imgFile) => {
 export const uploadVideoAPI = async (videoFile) => {
     try {
         const formData = new FormData();
-        formData.append("video", videoFile, `${videoFile.name}`)
+        formData.append("video", videoFile, videoFile.name)
         const APIURL = "http://localhost:3000/inovation/uploadvideo"
 
         const response = await fetch(APIURL, {
             method: 'POST',
-            body: videoFile
+            body: formData
         })
 
         if (response.ok) {
