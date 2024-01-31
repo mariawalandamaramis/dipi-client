@@ -103,6 +103,7 @@ function ListInovasi() {
               category={data.category.name}
               title={data.title}
               time={data.price}
+              id={1}
             />
           ))}
         </div>

@@ -26,7 +26,7 @@ function Navbar() {
           <div className='flex justify-between items-center gap-x-8'>
             <div className='hidden md:flex items-center text-base font-semibold'>
               <ul className='flex gap-x-6'>
-                <Link to={'/listpage'}><li className='hover:underline underline-offset-8'>Daftar Inovasi Aktif</li></Link>
+                <Link to={'/inovasi'}><li className='hover:underline underline-offset-8'>Daftar Inovasi Aktif</li></Link>
                 <Link to={'/ajukaninovasi'}><li className='hover:underline underline-offset-8'>Ajukan Inovasi</li></Link>
               </ul>
             </div>
@@ -47,7 +47,7 @@ function Navbar() {
             }
             <div className='md:hidden flex items-center gap-4'>
               <button onClick={toggleMenu}>
-                {openMenu ? (<img src="Close.svg" alt="" srcSet="" />) : (<img src="Menu.svg" alt="" srcSet="" />)}
+                {openMenu ? (<img src="/Close.svg" alt="" srcSet="" />) : (<img src="/Menu.svg" alt="" srcSet="" />)}
               </button>
             </div>
           </div>
@@ -58,7 +58,7 @@ function Navbar() {
         {openMenu && (
           <div className='w-full absolute bg-white md:hidden border-b-2'>
             <ul className='text-center text-base font-semibold'>
-              <Link to={'/listpage'}><li className='py-6 border-b-2'>Daftar Inovasi Aktif</li></Link>
+              <Link to={'/inovasi'}><li className='py-6 border-b-2'>Daftar Inovasi Aktif</li></Link>
               <Link to={'/ajukaninovasi'}><li className='py-6 border-b-2'>Ajukan Inovasi</li></Link>
             </ul>
             <div className={`${Cookies.get('responLogin') ? ('hidden') : ('flex')} items-center justify-center p-6 mt-20`}>

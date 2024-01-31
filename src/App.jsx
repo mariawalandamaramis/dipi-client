@@ -14,6 +14,7 @@ import DetailPageInovasi from './pages/DetailPageInovasi'
 import ListPageInovasi from './pages/ListPageInovasi'
 import Cookies from 'js-cookie'
 import Ajukaninovasi_form from './pages/Ajukaninovasi_form'
+import OpsiDukungan from './pages/OpsiDukungan'
 
 
 
@@ -39,8 +40,9 @@ const App = () => {
           <Route path='/' element={<Landingpage />} />
           <Route path='/login' element={<AlreadyLogin><LoginRegisterForm /></AlreadyLogin>} />
           <Route path='/signup' element={<AlreadyLogin><SignUpForm /></AlreadyLogin>} />
-          <Route path='/detailpage' element={<DetailPageInovasi />} />
-          <Route path='/listpage' element={<ListPageInovasi />} />
+          <Route path='/inovasi' element={<ListPageInovasi />} />
+          <Route path='/inovasi/:id' element={<DetailPageInovasi />} />
+          <Route path='/inovasi/:id/dukungan' element={<OpsiDukungan />} />
           <Route path='/ajukaninovasi' element={<Ajukaninovasi />} />
           <Route path='/ajukaninovasi/form' element={<Ajukaninovasi_form/>} />
           <Route path='/dashboard' element={<NotLogin><LayoutDashboard /></NotLogin>} >

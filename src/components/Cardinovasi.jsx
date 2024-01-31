@@ -1,14 +1,14 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-const Cardinovasi = ({ addLocation, addButton, linkButton, handleButton, image, category, title, time }) => {
+const Cardinovasi = ({ addLocation, addButton, linkButton, handleButton, image, category, title, time,id }) => {
   return (
     <>
       <div className='border-2 rounded-xl'>
         <img className='object-cover h-40 w-full rounded-t-xl' src={image} alt="" srcset="" />
         <div className='flex flex-col gap-8 px-6 py-5'>
           <div className='flex flex-col gap-2 h-32'>
-            <Link to="/detailpage">
+            <Link to={`/inovasi/${id}`}>
               <p className='text-base font-thin underline'>{category}</p>
               <h2 className='text-lg font-extrabold line-clamp-2'>{title}</h2>
               <p className='text-base font-thin'>Oleh: Tralala Lulu</p>
