@@ -3,8 +3,8 @@ import Formstep1 from './Formstep1'
 import Formstep2 from './Formstep2'
 import Formstep3 from './Formstep3'
 import { useForm } from 'react-hook-form'
-import { uploadImageAPI, uploadInovasiAPI, uploadPackageDonate, uploadVideoAPI } from './uploaderAPI'
-import Cookies from 'js-cookie'
+import { useDispatch, useSelector } from 'react-redux'
+import { postImageAPI, postInovasiAPI, postPaketDonasiAPI, postVideoAPI } from '../../redux/slice/ajukaninovasi-slice'
 
 
 const Forminovasi = () => {
@@ -49,6 +49,10 @@ const Forminovasi = () => {
   })
 
 
+  const dispatch = useDispatch()
+  const ajukanInovasi = useSelector((state) => state.ajukanInovasi)
+
+
   const nextStep = async () => {
     setFormSubmitted(false);
     let isValid = false
@@ -68,43 +72,49 @@ const Forminovasi = () => {
 
       // cek apakah valid ? jika valid alert // post API
       if (isValid) {
+
         alert('Ajukan Inovasi ?')
 
-        uploadImageAPI(dataFormImage)
-        uploadVideoAPI(dataFormVideo)
+        try {
+          // post image video
+          dispatch(postImageAPI(dataFormImage))
+          dispatch(postVideoAPI(dataFormVideo))
 
-        const dataImage = Cookies.get('dataImage')
-        const dataVideo = Cookies.get('dataVideo')
+          console.log(ajukanInovasi.dataImage)
+          console.log(ajukanInovasi.dataVideo)
 
-        const parsedDataImage = JSON.parse(dataImage);
-        const parsedDataVideo = JSON.parse(dataVideo);
 
-        setDataInovation((prevData) => ({
-          ...prevData,
-          image: parsedDataImage?.data || '',
-          video: parsedDataVideo?.data || '',
-        }));
+          // ambil url image video di properti data taruh di data Inovasi yg akan di post
+          setDataInovation((prevStep) => ({
+            ...prevStep,
+            image: ajukanInovasi.dataImage.data,
+            video: ajukanInovasi.dataVideo.data
+          }))
 
-        uploadInovasiAPI(dataInovation)
+          // post inovasi - jika url foto dan video tersedia
+          if (ajukanInovasi.dataImage.data !== '') {
+            dispatch(postInovasiAPI(dataInovation))
+          }
 
-        const dataInovationAPI = Cookies.get('dataInovasi')
-        const parseDataInovationAPI = JSON.parse(dataInovationAPI)
+          console.log(ajukanInovasi.dataInovasi)
 
-        setDataSuvenir1((prevData) => ({...prevData, inovation_id: parseDataInovationAPI.id}))
-        setDataSuvenir2((prevData) => ({...prevData, inovation_id: parseDataInovationAPI.id}))
-        setDataSuvenir3((prevData) => ({...prevData, inovation_id: parseDataInovationAPI.id}))
+          // ambil id inovasi untuk post paket donasi
+          setDataSuvenir1((prevStep) => ({ ...prevStep, inovation_id: ajukanInovasi.dataInovasi.data.id }))
+          setDataSuvenir2((prevStep) => ({ ...prevStep, inovation_id: ajukanInovasi.dataInovasi.data.id }))
+          setDataSuvenir3((prevStep) => ({ ...prevStep, inovation_id: ajukanInovasi.dataInovasi.data.id }))
 
-        uploadPackageDonate(dataSuvenir1)
-        uploadPackageDonate(dataSuvenir2)
-        uploadPackageDonate(dataSuvenir3)
+          // post paket donasi
+          dispatch(postPaketDonasiAPI(dataSuvenir1))
+          dispatch(postPaketDonasiAPI(dataSuvenir2))
+          dispatch(postPaketDonasiAPI(dataSuvenir3))
 
-        alert('inovasi sudah diajukan')
+          console.log(ajukanInovasi.dataPaketDonasi)
 
-        // Handle form submission logic here
+        } catch (error) {
+          alert ('ulangi lagi/ klik submit lagi')
+        }
 
-        // post image dulu / video => url
-        // respon image masukin ke object yang akan di post createinovasi
-        // lalu post DonatePackage gunakan respon dari createinovasi untuk dapat idnya
+        // alert('inovasi sudah diajukan')
 
       }
 
@@ -162,7 +172,6 @@ const Forminovasi = () => {
   } = useForm()
 
   const onSubmit = (data) => {
-    console.log(data.image)
 
     setFormSubmitted(true);
 
