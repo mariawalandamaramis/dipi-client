@@ -1,11 +1,24 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import DetailDesc from "./DetailDesc";
 import KabarbaruDesc from "./KabarbaruDesc";
+import { useDispatch, useSelector } from "react-redux";
+import { getArtikelAPI, getInovasiByIdAPI } from "../../redux/slice/inovasi-slice";
 
 function Detail() {
+  const { id } = useParams()
+  const dispatch = useDispatch()
+  const inovasiById = useSelector((state) => state.inovasi).inovasiById
+  const artikelByIdInovasi = useSelector((state) => state.inovasi).artikel
   const [toggleTab, setToggleTab] = useState(1)
-  const updateToggle = (id) => { setToggleTab(id) }
+  const updateToggle = (idTab) => { setToggleTab(idTab) }
+
+  console.log(artikelByIdInovasi)
+
+  useEffect(() => {
+    dispatch(getInovasiByIdAPI(id))
+    dispatch(getArtikelAPI(1)) // nanti diganti id inovasi / id dari params
+  }, [])
 
   const kemungkinanAPI = {
     amount: 5000000,
@@ -41,7 +54,7 @@ function Detail() {
         </div>
         <div className="md:w-1/2 flex flex-col gap-4">
           <p className="text-base font-normal underline underline-offset-4">kerajinan</p>
-          <h3 className="text-3xl font-extrabold">Helm Batok Kelapa Ramah Lingkungan + Multifungsi</h3>
+          <h3 className="text-3xl font-extrabold">{inovasiById.title}</h3>
           <div className='flex items-center gap-2'>
             <div className='w-10 md:w-10 h-10 md:h-10'>
               <img className='w-full h-full rounded-full object-cover' src="/Hero.png" alt="" srcset="" />
@@ -108,11 +121,22 @@ function Detail() {
 
         {/* hasil dari tab */}
         <div>
-          <div className={toggleTab === 1 ? 'visible' : 'hidden'}><DetailDesc /></div>
-          <div className={`${toggleTab === 2 ? 'visible' : 'hidden'} flex flex-col gap-8`}>
-            <KabarbaruDesc />
+          <div className={toggleTab === 1 ? 'visible' : 'hidden'}>
+            <DetailDesc
+              description={inovasiById.description}
+            />
+          </div>
 
-            <div className="py-10 text-2xl text-center font-semibold bg-green-900 text-white rounded-lg">
+          <div className={`${toggleTab === 2 ? 'visible' : 'hidden'} flex flex-col gap-8`}>
+            {artikelByIdInovasi.map((data, idx) => (
+              <KabarbaruDesc
+                key={data.id}
+                artikelKe={idx + 1}
+                name={data.name}
+                description={data.body}
+              />
+            ))}
+            <div className="py-10 text-base md:text-2xl text-center font-semibold bg-green-900 text-white rounded-lg">
               <p>
                 Pencarian dukungan inovasi ini
                 <br />

@@ -3,103 +3,92 @@ import { createSlice } from '@reduxjs/toolkit';
 const inovasiSlice = createSlice({
     name: 'inovasi',
     initialState: {
-        judul_inovasi: '',
-        deskripsi_singkat: '',
-        lokasi_kota: '',
-        lokasi_propinsi: '',
-        alamat: '',
-        kategori_inovasi: '',
-        foto_pendukung: '',
-        video_pendukung: '',
-        jml_pengajuan_dana: '',
-        durasi_kampanye: '',
-        detail_inovasi: '',
-        dana_suvenir1: '',
-        bentuk_suvenir1: '',
-        dana_suvenir2: '',
-        bentuk_suvenir2: '',
-        dana_suvenir3: '',
-        bentuk_suvenir3: '',
+        inovasi: [],
+        kategori: [],
+        inovasiById: [],
+        artikel: [],
+        paketDukungan: []
     },
 
     reducers: {
-        getValueFormPengajuan(state, action) {
+        getSemuaInovasi(state, action) {
             state.inovasi = action.payload
-            // console.log(state)
-            // console.log('action payload')
-            // console.log(action.payload)
-            // const newInovasi= {
-            //     // isi form 1
-            //     judul_inovasi : action.payload.judul_inovasi,
-            //     deskripsi_singkat : action.payload.deskripsi_singkat,
-            //     lokasi_kota : action.payload.lokasi_kota,
-            //     lokasi_propinsi : action.payload.lokasi_propinsi,
-            //     alamat : action.payload.alamat,
-            //     kategori_inovasi : action.payload.kategori_inovasi,
-            //     foto_pendukung : action.payload.foto_pendukung,
-            //     video_pendukung : action.payload.video_pendukung,
-            //     jml_pengajuan_dana : action.payload.jml_pengajuan_dana,
-            //     durasi_kampanye : action.payload.durasi_kampanye,
-
-            //     // isi form 2
-            //     detail_inovasi : action.payload.detail_inovasi,
-
-            //     // isi form
-            //     dana_suvenir1 : action.payload.dana_suvenir1,
-            //     bentuk_suvenir1 : action.payload.bentuk_suvenir1,
-            //     dana_suvenir2 : action.payload.dana_suvenir2,
-            //     bentuk_suvenir2 : action.payload.bentuk_suvenir2,
-            //     dana_suvenir3 : action.payload.dana_suvenir1,
-            //     bentuk_suvenir3 : action.payload.bentuk_suvenir3,
-            // }
-
-            // if (newInovasi.length === 10) {
-            //     const form1 = [newInovasi]
-            //     console.log(form1)
-            // } else if (newInovasi.length === 1) {
-            //     const form2 = [newInovasi]
-            //     console.log(form2)
-            // } else {
-            //     const form3 = [newInovasi]
-            //     console.log(form3)
-            // }
-
-            // console.log(newInovasi)
-            // state.inovasi = [...state.inovasi, newInovasi]
-            // state.inovasi = [newInovasi]
-
-
-
-            // const ditampungdulu = {
-            //     form1 : {},
-            //     form2 : {},
-            // }
-
-            // const {form, value} = action.payload
-            // ditampungdulu[form] = {...ditampungdulu[form], ...value}
-
-            // console.log('ditampung')
-            // console.log(ditampungdulu)
-
-            // const formInput = action.payload
-
-            // console.log(formInput)
-            // console.log(typeof(formInput))
-
-            // const valueForm = formInput.find(item => item.form === 'form1').value
-            // console.log('isis value form')
-            // const valueForm = formInput.value
-
-            // const combineValue = {...state.inovasi, ...valueForm}
-            // console.log('combine')
-            // console.log(combineValue)
-
-            // state.inovasi = [...state.inovasi, valueForm]
-
-
+        },
+        getKategori(state, action) {
+            state.kategori = action.payload
+        },
+        getInovasiById(state, action) {
+            state.inovasiById = action.payload
+        },
+        getArtikel(state, action) {
+            state.artikel = action.payload
+        },
+        getOpsiDukungan(state, action) {
+            state.paketDukungan = action.payload
         }
     }
 })
 
-export const { getValueFormPengajuan } = inovasiSlice.actions
+export const { getSemuaInovasi, getKategori, getInovasiById, getOpsiDukungan, getArtikel } = inovasiSlice.actions
 export default inovasiSlice.reducer
+
+export const getSemuaInovasiAPI = async (dispatch) => {
+    try {
+        const getRespon = await fetch('https://api.escuelajs.co/api/v1/products')
+        const result = await getRespon.json()
+        dispatch(getSemuaInovasi(result))
+
+    } catch (error) {
+        console.log('error ga bisa ambil API : get SemuaInovasi')
+    }
+}
+
+export const getKategoriAPI = async (dispatch) => {
+    try {
+        const getRespon = await fetch('https://api.escuelajs.co/api/v1/categories')
+        const result = await getRespon.json()
+        dispatch(getKategori(result))
+
+    } catch (error) {
+        console.log('error ga bisa ambil API : get Kategori')
+    }
+}
+
+export const getInovasiByIdAPI = (id) => {
+    return async (dispatch) => {
+        try {
+            const getRespon = await fetch(`https://api.escuelajs.co/api/v1/products/${id}`)
+            const result = await getRespon.json()
+            dispatch(getInovasiById(result))
+
+        } catch (error) {
+            console.log('error ga bisa ambil API : get Inovasi by Id')
+        }
+    }
+}
+
+export const getArtikelAPI = (id) => {
+    return async (dispatch) => {
+        try {
+            const getRespon = await fetch(`https://jsonplaceholder.typicode.com/comments?postId=${id}`)
+            const result = await getRespon.json()
+            dispatch(getArtikel(result))
+
+        } catch (error) {
+            console.log('error ga bisa ambil API : get Artikel by Id inovasi')
+        }
+    }
+}
+
+export const getOpsiDukunganAPI = (id) => {
+    return async (dispatch) => {
+        try {
+            const getRespon = await fetch(`https://api.escuelajs.co/api/v1/products/${id}`)
+            const result = await getRespon.json()
+            dispatch(getOpsiDukungan(result))
+
+        } catch (error) {
+            console.log('error ga bisa ambil API : get Opsi Dukungan by Id inovasi')
+        }
+    }
+}

@@ -1,28 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import Cardinovasi from './Cardinovasi';
 import Select from 'react-select';
+import { useDispatch, useSelector } from 'react-redux';
+import { getKategoriAPI, getSemuaInovasiAPI } from '../redux/slice/inovasi-slice';
 
 // contoh API, nanti diganti
 // https://api.escuelajs.co/api/v1/products
 // https://api.escuelajs.co/api/v1/categories
 
 function ListInovasi() {
-  const [fakeData, setFakeData] = useState([])
-  const [fakeCategory, setFakeCategory] = useState([])
+  const dispatch = useDispatch()
+  const semuaInovasi = useSelector((state) => state.inovasi).inovasi
+  const kategoriInovasi = useSelector((state) => state.inovasi).kategori
   const [selectedCategory, setSelectedCategory] = useState(null)
   const [selectSort, setSelectSort] = useState(null)
 
-  console.log(fakeData.sort((a, b) => new Date(b.price) - new Date(a.price))) // termahal --- contoh saja, nanti di hapus
-  console.log(fakeData.sort((a, b) => new Date(b.price) - new Date(a.price))) // termurah --- contoh saja, nanti di hapus
-
-
-  const CategoryOptions = fakeCategory.map((data) => ({
+  const CategoryOptions = kategoriInovasi.map((data) => ({
     value: data.name,
     label: data.name
   }))
 
   const resultFilterSelected = () => {
-    let filterData = [...fakeData];
+    let filterData = [...semuaInovasi];
 
     if (selectSort && selectSort.value === 'terbaru') {
       filterData = filterData.sort((a, b) => new Date(b.price) - new Date(a.price));
@@ -43,13 +42,8 @@ function ListInovasi() {
   ]
 
   useEffect(() => {
-    fetch('https://api.escuelajs.co/api/v1/products')
-      .then((respone) => respone.json())
-      .then((data) => setFakeData(data));
-
-    fetch('https://api.escuelajs.co/api/v1/categories')
-      .then((respon) => respon.json())
-      .then((data) => setFakeCategory(data))
+    dispatch(getSemuaInovasiAPI)
+    dispatch(getKategoriAPI)
   }, [])
 
   return (
@@ -103,7 +97,7 @@ function ListInovasi() {
               category={data.category.name}
               title={data.title}
               time={data.price}
-              id={1}
+              id={data.id}
             />
           ))}
         </div>
