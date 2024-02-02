@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Formstep1 from './Formstep1'
 import Formstep2 from './Formstep2'
 import Formstep3 from './Formstep3'
@@ -9,6 +9,8 @@ import withReactContent from 'sweetalert2-react-content'
 import Swal from 'sweetalert2'
 import { getDataSubmit, postAjukanInovasiCompleted, postImageAPI, postVideoAPI } from '../../redux/slice/ajukaninovasi-slice'
 import { Await } from 'react-router-dom'
+import axios from 'axios'
+import { uploadImageAPI } from './uploaderAPI'
 
 
 const Forminovasi = () => {
@@ -53,9 +55,21 @@ const Forminovasi = () => {
     description: ''
   })
 
+  const [imgHasilPromise, setImgHasilPromise] = useState('')
+  const [vidHasilPromise, setVidHasilPromise] = useState('')
+  const [isSubmit, setIsSubmit] = useState(false)
+
+  useEffect(() => {
+    console.log(imgHasilPromise);
+    console.log(vidHasilPromise);
+  }, [isSubmit]);
+  
+
 
   const dispatch = useDispatch()
   const ajukanInovasi = useSelector((state) => state.ajukanInovasi)
+  // console.log(ajukanInovasi.dataImage)
+  // console.log(ajukanInovasi.dataVideo)
 
   const alertMessageTimer = () => {
     withReactContent(Swal).fire({
@@ -102,15 +116,141 @@ const Forminovasi = () => {
 
         alert('Ajukan Inovasi ?')
 
+        // setIsSubmit(false)
+
+        // const imgformData = new FormData();
+        // imgformData.append("file", dataFormImage, dataFormImage.name)
+        // const imgAPIURL = "http://localhost:3000/inovation/uploadImage"
+        // let resultIMG = []
+
+        // const vidformData = new FormData();
+        // vidformData.append("video", dataFormVideo, dataFormVideo.name)
+        // const vidAPIURL = "http://localhost:3000/inovation/uploadvideo"
+        // let resultVID = []
+
+        // Promise.all([
+        //   fetch(imgAPIURL, {
+        //     method: 'POST',
+        //     body: imgformData
+        //   })
+        //     .then(postResponImg => {
+        //       console.log(postResponImg)
+        //       if (postResponImg.ok) {
+        //         return postResponImg.json()
+        //       }
+        //     })
+        //     .then(resultImg => {
+        //       console.log(resultImg)
+        //       setImgHasilPromise(resultImg)
+        //       resultIMG.push(resultImg)
+        //     })
+
+        //   ,
+        //   fetch(vidAPIURL, {
+        //     method: 'POST',
+        //     body: vidformData
+        //   })
+        //     .then(postResponVid => {
+        //       console.log(postResponVid)
+        //       if (postResponVid.ok) {
+        //         return postResponVid.json()
+        //       }
+        //     })
+        //     .then(resultVid => {
+        //       console.log(resultVid)
+        //       setVidHasilPromise(resultVid.data)
+        //       resultVID.push(resultVid)
+        //       setIsSubmit(true)
+        //     })
+        // ]).then((res) => console.log({ res }))
+
+        // // console.log(resultIMG)
+        // // console.log(resultVID)
+
+        // console.log(imgHasilPromise)
+        // console.log(vidHasilPromise)
+
+
+
+
         const dataWithoutImageVideo = { ...dataSubmitForm };
         delete dataWithoutImageVideo.image;
         delete dataWithoutImageVideo.video;
 
-        // memastikan ini jalan dulu, berhasil!!!!! yeeeee
-        // await Promise.all([
+        // const APIURL_IMG = 'http://localhost:3000/inovation/uploadImage';
+        // const APIURL_VID = 'http://localhost:3000/inovation/uploadvideo'
+        // const APIURL_INOVASI = 'http://localhost:3000/inovation'
+        // const APIURL_PKTDONASI = 'http://localhost:3000/package'
+
+
+
+        // Promise.all([promiseIMG, promiseVid]).then(function(value) {
+        //   console.log(value)
+        //   console.log(responImg)
+        //   console.log(responVid)
+        // })
+
+
+        // // -----
+
+        // const imgPost = new FormData()
+        // imgPost.append('file', dataFormImage, dataFormImage.name)
+        // const responImg = []
+
+        // const vidPost = new FormData()
+        // vidPost.append('video', dataFormVideo, dataFormVideo.name)
+        // const responVid = []
+
+
+        // const promiseIMG = axios.post(APIURL_IMG, imgPost)
+        //   .then(resultImg => {
+        //     responImg.push(resultImg)
+        //   })
+        //   .catch(error => {
+        //     console.log(error)
+        //   });
+
+        // const promiseVid = axios.post(APIURL_VID, vidPost)
+        //   .then(resultVid => {
+        //     responVid.push(resultVid)
+        //   })
+        //   .catch(error => {
+        //     console.log(error)
+        //   });
+
+        // // --------
+
+        // console.log(responImg)
+        // console.log(responVid)
+
+
+        // // memastikan ini jalan dulu, berhasil!!!!! yeeeee
+        // Promise.all([
         //   dispatch(postImageAPI(dataFormImage)),
         //   dispatch(postVideoAPI(dataFormVideo))
-        // ])
+        // ]).then(() => {
+
+        //   const imgRedux = useSelector((state) => state.ajukanInovasi).dataImage
+
+        //   if (Object.keys(imgRedux).length !== 0) {
+        //     dispatch(postAjukanInovasiCompleted(dataWithoutImageVideo))
+        //   }
+        // })
+
+        //  dispatch(postAjukanInovasiCompleted(dataWithoutImageVideo))
+
+
+        //  delay 30 detik, 
+        // await new Promise(resolve => setTimeout(resolve, 3000));
+
+
+        dispatch(postAjukanInovasiCompleted(dataWithoutImageVideo))
+
+
+        console.log(ajukanInovasi)
+
+
+
 
         // dispatch(postImageAPI(dataFormImage))
         // dispatch(postVideoAPI(dataFormVideo))
@@ -119,15 +259,6 @@ const Forminovasi = () => {
         // console.log(ajukanInovasi.dataVideo)
 
         // pastiin ini jalan dulu, baru buka consol.log
-
-        // delay 30 detik, ben fotone ke uplod, hhuuuuu
-        // await new Promise(resolve => setTimeout(resolve, 30000));
-
-
-        dispatch(postAjukanInovasiCompleted(dataWithoutImageVideo))
-
-
-        console.log(ajukanInovasi)
 
 
         // ini bikin erro, krn dianggap promis, 
@@ -376,6 +507,7 @@ const Forminovasi = () => {
     } else {
       setErrInputFile(prevStep => ({ ...prevStep, image: '' }))
       setDataFormImage(data.image[0])
+      dispatch(postImageAPI(dataFormImage))
     }
 
     if (!data.hasOwnProperty('video')) {
@@ -383,6 +515,7 @@ const Forminovasi = () => {
     } else {
       setErrInputFile(prevStep => ({ ...prevStep, video: '' }))
       setDataFormVideo(data.video[0])
+      dispatch(postVideoAPI(dataFormVideo))
     }
 
     // dispatch(getDataSubmit(data))
