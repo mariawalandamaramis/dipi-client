@@ -45,7 +45,8 @@ const App = () => {
           <Route path='/inovasi/:id/dukungan' element={<OpsiDukungan />} />
           <Route path='/ajukaninovasi' element={<Ajukaninovasi />} />
           <Route path='/ajukaninovasi/form' element={<Ajukaninovasi_form/>} />
-          <Route path='/dashboard' element={<NotLogin><LayoutDashboard /></NotLogin>} >
+          {/* <Route path='/dashboard' element={<NotLogin><LayoutDashboard /></NotLogin>} > */}
+          <Route path='/dashboard' element={<LayoutDashboard />} >
             <Route index element={<Dashboard />} />
             <Route path='inovasiku' element={<DashoardInovasiku />} >
               <Route path=':id' element={<DashoardInovasiku_update />} />

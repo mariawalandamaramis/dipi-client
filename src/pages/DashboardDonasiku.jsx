@@ -1,8 +1,9 @@
 import React from 'react'
+import DonasikuItem from '../components/dashboarddonasiku/DonasikuItem'
 
 const DashboardDonasiku = () => {
   return (
-    <div>DashboardDonasiku</div>
+    <DonasikuItem />
   )
 }
 
