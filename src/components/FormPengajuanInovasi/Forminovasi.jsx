@@ -1,10 +1,16 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Formstep1 from './Formstep1'
 import Formstep2 from './Formstep2'
 import Formstep3 from './Formstep3'
 import { useForm } from 'react-hook-form'
-import { uploadImageAPI, uploadInovasiAPI, uploadPackageDonate, uploadVideoAPI } from './uploaderAPI'
-import Cookies from 'js-cookie'
+import { useDispatch, useSelector } from 'react-redux'
+// import { getDataSubmit, postImageAPI, postInovasiAPI, postPaketDonasiAPI, postVideoAPI } from '../../redux/slice/ajukaninovasi-slice'
+import withReactContent from 'sweetalert2-react-content'
+import Swal from 'sweetalert2'
+import { getDataSubmit, postAjukanInovasiCompleted, postImageAPI, postVideoAPI } from '../../redux/slice/ajukaninovasi-slice'
+import { Await } from 'react-router-dom'
+import axios from 'axios'
+import { uploadImageAPI } from './uploaderAPI'
 
 
 const Forminovasi = () => {
@@ -16,6 +22,7 @@ const Forminovasi = () => {
   })
   const [canNext, setCanNext] = useState(false)
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [dataSubmitForm, setDataSubmitForm] = useState({})
   const [dataFormImage, setDataFormImage] = useState({})
   const [dataFormVideo, setDataFormVideo] = useState({})
   const [dataInovation, setDataInovation] = useState({
@@ -48,6 +55,44 @@ const Forminovasi = () => {
     description: ''
   })
 
+  const [imgHasilPromise, setImgHasilPromise] = useState('')
+  const [vidHasilPromise, setVidHasilPromise] = useState('')
+  const [isSubmit, setIsSubmit] = useState(false)
+
+  useEffect(() => {
+    console.log(imgHasilPromise);
+    console.log(vidHasilPromise);
+  }, [isSubmit]);
+  
+
+
+  const dispatch = useDispatch()
+  const ajukanInovasi = useSelector((state) => state.ajukanInovasi)
+  // console.log(ajukanInovasi.dataImage)
+  // console.log(ajukanInovasi.dataVideo)
+
+  const alertMessageTimer = () => {
+    withReactContent(Swal).fire({
+      title: "Pengajuan inovasi sedang di proses",
+      html: "Proses ini membutuhkan waktu <b></b> untuk melakukan proses pengajuan",
+      imageUrl: "/Hero.png",
+      imageWidth: 400,
+      imageHeight: 200,
+      timer: 1500,
+      timerProgressBar: true,
+      didOpen: () => {
+        Swal.showLoading();
+        const timer = Swal.getPopup().querySelector("b");
+        timerInterval = setInterval(() => {
+          timer.textContent = `${Swal.getTimerLeft()}`;
+        }, 100);
+      },
+      willClose: () => {
+        clearInterval(timerInterval);
+      }
+    })
+  }
+
 
   const nextStep = async () => {
     setFormSubmitted(false);
@@ -68,43 +113,332 @@ const Forminovasi = () => {
 
       // cek apakah valid ? jika valid alert // post API
       if (isValid) {
+
         alert('Ajukan Inovasi ?')
 
-        uploadImageAPI(dataFormImage)
-        uploadVideoAPI(dataFormVideo)
+        // setIsSubmit(false)
 
-        const dataImage = Cookies.get('dataImage')
-        const dataVideo = Cookies.get('dataVideo')
+        // const imgformData = new FormData();
+        // imgformData.append("file", dataFormImage, dataFormImage.name)
+        // const imgAPIURL = "http://localhost:3000/inovation/uploadImage"
+        // let resultIMG = []
 
-        const parsedDataImage = JSON.parse(dataImage);
-        const parsedDataVideo = JSON.parse(dataVideo);
+        // const vidformData = new FormData();
+        // vidformData.append("video", dataFormVideo, dataFormVideo.name)
+        // const vidAPIURL = "http://localhost:3000/inovation/uploadvideo"
+        // let resultVID = []
 
-        setDataInovation((prevData) => ({
-          ...prevData,
-          image: parsedDataImage?.data || '',
-          video: parsedDataVideo?.data || '',
-        }));
+        // Promise.all([
+        //   fetch(imgAPIURL, {
+        //     method: 'POST',
+        //     body: imgformData
+        //   })
+        //     .then(postResponImg => {
+        //       console.log(postResponImg)
+        //       if (postResponImg.ok) {
+        //         return postResponImg.json()
+        //       }
+        //     })
+        //     .then(resultImg => {
+        //       console.log(resultImg)
+        //       setImgHasilPromise(resultImg)
+        //       resultIMG.push(resultImg)
+        //     })
 
-        uploadInovasiAPI(dataInovation)
+        //   ,
+        //   fetch(vidAPIURL, {
+        //     method: 'POST',
+        //     body: vidformData
+        //   })
+        //     .then(postResponVid => {
+        //       console.log(postResponVid)
+        //       if (postResponVid.ok) {
+        //         return postResponVid.json()
+        //       }
+        //     })
+        //     .then(resultVid => {
+        //       console.log(resultVid)
+        //       setVidHasilPromise(resultVid.data)
+        //       resultVID.push(resultVid)
+        //       setIsSubmit(true)
+        //     })
+        // ]).then((res) => console.log({ res }))
 
-        const dataInovationAPI = Cookies.get('dataInovasi')
-        const parseDataInovationAPI = JSON.parse(dataInovationAPI)
+        // // console.log(resultIMG)
+        // // console.log(resultVID)
 
-        setDataSuvenir1((prevData) => ({...prevData, inovation_id: parseDataInovationAPI.id}))
-        setDataSuvenir2((prevData) => ({...prevData, inovation_id: parseDataInovationAPI.id}))
-        setDataSuvenir3((prevData) => ({...prevData, inovation_id: parseDataInovationAPI.id}))
+        // console.log(imgHasilPromise)
+        // console.log(vidHasilPromise)
 
-        uploadPackageDonate(dataSuvenir1)
-        uploadPackageDonate(dataSuvenir2)
-        uploadPackageDonate(dataSuvenir3)
+
+
+
+        const dataWithoutImageVideo = { ...dataSubmitForm };
+        delete dataWithoutImageVideo.image;
+        delete dataWithoutImageVideo.video;
+
+        // const APIURL_IMG = 'http://localhost:3000/inovation/uploadImage';
+        // const APIURL_VID = 'http://localhost:3000/inovation/uploadvideo'
+        // const APIURL_INOVASI = 'http://localhost:3000/inovation'
+        // const APIURL_PKTDONASI = 'http://localhost:3000/package'
+
+
+
+        // Promise.all([promiseIMG, promiseVid]).then(function(value) {
+        //   console.log(value)
+        //   console.log(responImg)
+        //   console.log(responVid)
+        // })
+
+
+        // // -----
+
+        // const imgPost = new FormData()
+        // imgPost.append('file', dataFormImage, dataFormImage.name)
+        // const responImg = []
+
+        // const vidPost = new FormData()
+        // vidPost.append('video', dataFormVideo, dataFormVideo.name)
+        // const responVid = []
+
+
+        // const promiseIMG = axios.post(APIURL_IMG, imgPost)
+        //   .then(resultImg => {
+        //     responImg.push(resultImg)
+        //   })
+        //   .catch(error => {
+        //     console.log(error)
+        //   });
+
+        // const promiseVid = axios.post(APIURL_VID, vidPost)
+        //   .then(resultVid => {
+        //     responVid.push(resultVid)
+        //   })
+        //   .catch(error => {
+        //     console.log(error)
+        //   });
+
+        // // --------
+
+        // console.log(responImg)
+        // console.log(responVid)
+
+
+        // // memastikan ini jalan dulu, berhasil!!!!! yeeeee
+        // Promise.all([
+        //   dispatch(postImageAPI(dataFormImage)),
+        //   dispatch(postVideoAPI(dataFormVideo))
+        // ]).then(() => {
+
+        //   const imgRedux = useSelector((state) => state.ajukanInovasi).dataImage
+
+        //   if (Object.keys(imgRedux).length !== 0) {
+        //     dispatch(postAjukanInovasiCompleted(dataWithoutImageVideo))
+        //   }
+        // })
+
+        //  dispatch(postAjukanInovasiCompleted(dataWithoutImageVideo))
+
+
+        //  delay 30 detik, 
+        // await new Promise(resolve => setTimeout(resolve, 3000));
+
+
+        dispatch(postAjukanInovasiCompleted(dataWithoutImageVideo))
+
+
+        console.log(ajukanInovasi)
+
+
+
+
+        // dispatch(postImageAPI(dataFormImage))
+        // dispatch(postVideoAPI(dataFormVideo))
+
+        // console.log(ajukanInovasi.dataImage)
+        // console.log(ajukanInovasi.dataVideo)
+
+        // pastiin ini jalan dulu, baru buka consol.log
+
+
+        // ini bikin erro, krn dianggap promis, 
+        // console.log(useSelector((state) => state.ajukanInovasi).dataImage)
+        // console.log(useSelector((state) => state.ajukanInovasi).dataVideo)
+
+        // console.log(dataWithoutImageVideo)
+        // dispatch(getDataSubmit(dataWithoutImageVideo)) // gagal
+        // krn di dldm ini ada fileLIst, redux ga nerima  non-serializable items
+        // ga bisa panggil hook redux krn ga di dalam function
+
+        // const abc = () => {
+        //   fetch().then
+        // }
+
+        // abc()
+
+        // // Error: Invalid hook call. Hooks can only be called inside of the body of a function component
+        // const postDataSubmit = () => {
+        //   dispatch(getDataSubmit(dataWithoutImageVideo))
+        // };
+
+        // postDataSubmit();
+
+
+        // dispacth langsung ke function API
+        // dispatch(postAjukanInovasiCompleted(dataWithoutImageVideo))
+
+        // console.log(useSelector((state) => state.ajukanInovasi).dataSubmit)
+
+
+        // //  alertMessageTimer()
+
+        // // console.log(dataFormImage)
+
+        // dispatch(postImageAPI(dataFormImage))
+        // dispatch(postVideoAPI(dataFormVideo))
+        // // await Promise.all([
+        // //   dispatch(postImageAPI(dataFormImage)), 
+        // //   dispatch(postVideoAPI(dataFormVideo))
+        // // ]);
+
+        // // console.log(ajukanInovasi.dataImage)
+        // // console.log(ajukanInovasi.dataVideo)
+
+
+        // // ambil url image video di properti data taruh di data Inovasi yg akan di post
+        // setDataInovation((prevStep) => ({
+        //   ...prevStep,
+        //   image: ajukanInovasi.dataImage.data,
+        //   video: ajukanInovasi.dataVideo.data
+        // }))
+
+        // // post inovasi
+        // dispatch(postInovasiAPI(dataInovation))
+
+        // // console.log(ajukanInovasi.dataInovasi.data.id)
+
+        // if (Object.keys(ajukanInovasi.dataInovasi).length !== 0) {
+        //   setDataSuvenir1((prevStep) => ({ ...prevStep, inovation_id: ajukanInovasi.dataInovasi.data.id }))
+        //   setDataSuvenir2((prevStep) => ({ ...prevStep, inovation_id: ajukanInovasi.dataInovasi.data.id }))
+        //   setDataSuvenir3((prevStep) => ({ ...prevStep, inovation_id: ajukanInovasi.dataInovasi.data.id }))
+
+        //   console.log('sampai disini')
+        // }
+
+        // // // ambil id inovasi untuk post paket donasi
+        // // setDataSuvenir1((prevStep) => ({ ...prevStep, inovation_id: ajukanInovasi.dataInovasi.data.id }))
+        // // setDataSuvenir2((prevStep) => ({ ...prevStep, inovation_id: ajukanInovasi.dataInovasi.data.id }))
+        // // setDataSuvenir3((prevStep) => ({ ...prevStep, inovation_id: ajukanInovasi.dataInovasi.data.id }))
+
+        // // post paket donasi
+        // // dispatch(postPaketDonasiAPI(dataSuvenir1))
+        // // dispatch(postPaketDonasiAPI(dataSuvenir2))
+        // // dispatch(postPaketDonasiAPI(dataSuvenir3))
+
+
+        // if (dataSuvenir1.id !== '') {
+        //   dispatch(postPaketDonasiAPI(dataSuvenir1))
+        //   dispatch(postPaketDonasiAPI(dataSuvenir2))
+        //   dispatch(postPaketDonasiAPI(dataSuvenir3))
+
+        //   console.log('ckckckc')
+        // }
+
+
+
+        // // console.log(ajukanInovasi.dataPaketDonasi)
+
+
+
+        // // // await Promise.all([
+        // // //   dispatch(postPaketDonasiAPI(dataSuvenir1)),
+        // // //   dispatch(postPaketDonasiAPI(dataSuvenir2)),
+        // // //   dispatch(postPaketDonasiAPI(dataSuvenir3)),
+        // // // ]);
+
+        // console.log(ajukanInovasi)
 
         alert('inovasi sudah diajukan')
 
-        // Handle form submission logic here
+        // dispatch(postImageAPI(dataFormImage))
+        //   .then(() => dispatch(postVideoAPI(dataFormVideo)))
+        //   .then(() => {
+        //     console.log(ajukanInovasi.dataImage);
+        //     console.log(ajukanInovasi.dataVideo);
 
-        // post image dulu / video => url
-        // respon image masukin ke object yang akan di post createinovasi
-        // lalu post DonatePackage gunakan respon dari createinovasi untuk dapat idnya
+        //     setDataInovation((prevStep) => ({
+        //       ...prevStep,
+        //       image: ajukanInovasi.dataImage.data,
+        //       video: ajukanInovasi.dataVideo.data,
+        //     }));
+
+        //     if (ajukanInovasi.dataImage.data !== '') {
+        //       return dispatch(postInovasiAPI(dataInovation));
+        //     }
+        //   })
+        //   .then((inovasiData) => {
+        //     if (inovasiData) {
+        //       console.log(inovasiData);
+        //       setDataSuvenir1((prevStep) => ({ ...prevStep, inovation_id: inovasiData.data.id }));
+        //       setDataSuvenir2((prevStep) => ({ ...prevStep, inovation_id: inovasiData.data.id }));
+        //       setDataSuvenir3((prevStep) => ({ ...prevStep, inovation_id: inovasiData.data.id }));
+
+        //       return Promise.all([
+        //         dispatch(postPaketDonasiAPI(dataSuvenir1)),
+        //         dispatch(postPaketDonasiAPI(dataSuvenir2)),
+        //         dispatch(postPaketDonasiAPI(dataSuvenir3)),
+        //       ]);
+        //     }
+        //   })
+        //   .then((donasiData) => {
+        //     if (donasiData) {
+        //       console.log(donasiData.dataPaketDonasi);
+        //     }
+        //   })
+        //   .catch((error) => {
+        //     alert('ulangi lagi/ klik submit lagi');
+        //   });
+
+        // try {
+        //   // post image video
+        //   dispatch(postImageAPI(dataFormImage))
+        //   dispatch(postVideoAPI(dataFormVideo))
+
+        //   console.log(ajukanInovasi.dataImage)
+        //   console.log(ajukanInovasi.dataVideo)
+
+
+        //   // ambil url image video di properti data taruh di data Inovasi yg akan di post
+        //   setDataInovation((prevStep) => ({
+        //     ...prevStep,
+        //     image: ajukanInovasi.dataImage.data,
+        //     video: ajukanInovasi.dataVideo.data
+        //   }))
+
+        //   // post inovasi - jika url foto dan video tersedia
+        //   if (ajukanInovasi.dataImage.data !== '') {
+        //     dispatch(postInovasiAPI(dataInovation))
+        //   }
+
+        //   console.log(ajukanInovasi.dataInovasi)
+
+        //   // ambil id inovasi untuk post paket donasi
+        //   setDataSuvenir1((prevStep) => ({ ...prevStep, inovation_id: ajukanInovasi.dataInovasi.data.id }))
+        //   setDataSuvenir2((prevStep) => ({ ...prevStep, inovation_id: ajukanInovasi.dataInovasi.data.id }))
+        //   setDataSuvenir3((prevStep) => ({ ...prevStep, inovation_id: ajukanInovasi.dataInovasi.data.id }))
+
+        //   // post paket donasi
+        //   dispatch(postPaketDonasiAPI(dataSuvenir1))
+        //   dispatch(postPaketDonasiAPI(dataSuvenir2))
+        //   dispatch(postPaketDonasiAPI(dataSuvenir3))
+
+        //   console.log(ajukanInovasi.dataPaketDonasi)
+
+        // } catch (error) {
+        //   alert('ulangi lagi/ klik submit lagi')
+        // }
+
+        // alert('inovasi sudah diajukan')
 
       }
 
@@ -162,15 +496,18 @@ const Forminovasi = () => {
   } = useForm()
 
   const onSubmit = (data) => {
-    console.log(data.image)
 
     setFormSubmitted(true);
+
+    // console.log(data)
+    setDataSubmitForm(data)
 
     if (!data.hasOwnProperty('image')) {
       setErrInputFile(prevStep => ({ ...prevStep, image: 'Image pendukung harus diisi!' }))
     } else {
       setErrInputFile(prevStep => ({ ...prevStep, image: '' }))
       setDataFormImage(data.image[0])
+      dispatch(postImageAPI(dataFormImage))
     }
 
     if (!data.hasOwnProperty('video')) {
@@ -178,7 +515,10 @@ const Forminovasi = () => {
     } else {
       setErrInputFile(prevStep => ({ ...prevStep, video: '' }))
       setDataFormVideo(data.video[0])
+      dispatch(postVideoAPI(dataFormVideo))
     }
+
+    // dispatch(getDataSubmit(data))
 
     setDataInovation(prevData => ({
       ...prevData,
