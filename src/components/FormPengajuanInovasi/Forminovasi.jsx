@@ -9,7 +9,6 @@ import withReactContent from 'sweetalert2-react-content'
 import Swal from 'sweetalert2'
 import { getDataSubmit, postAjukanInovasiCompleted, postImageAPI, postVideoAPI } from '../../redux/slice/ajukaninovasi-slice'
 import { Await } from 'react-router-dom'
-import axios from 'axios'
 import { uploadImageAPI } from './uploaderAPI'
 
 
