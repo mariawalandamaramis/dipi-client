@@ -27,7 +27,7 @@ const Cardopsidonasi = ({ sovenir, nominal, onClick, description, title }) => {
                     </div>
                     <div>
                         <p className='text-base font-semibold mb-2'>Cara pengiriman ?</p>
-                        <p className='text-sm font-normal'>Produk {title} dikirm dari kota Palopo, Sulawesi Selatan. Estimasi mulai pengiriman 25 Januari 2024 (seminggu setelah kampanye ditutup) </p>
+                        <p className='text-sm font-normal'>Produk {title} di kirim dari kota Palopo, Sulawesi Selatan. Estimasi mulai pengiriman 25 Januari 2024 (Seminggu setelah kampanye ditutup) </p>
                     </div>
                 </div>
             </div>

@@ -79,7 +79,7 @@ const Forminovasi = () => {
         <div>
           <div className='text-center mb-10'>
             <h1 className='text-3xl font-bold'>Ajukan Inovasi Terbaikmu</h1>
-            <p className='text-lg font-normal md:px-28'>Silakan isi formulir di bawah ini untuk pengajuan inovasmu. Berikan detail sebanyak yang diperlukan.</p>
+            <p className='text-lg font-normal md:px-28'>Silahkan isi formulir di bawah ini untuk pengajuan inovasmu. Berikan detail sebanyak yang diperlukan.</p>
           </div>
 
           <div className='border-2 rounded-2xl p-5 md:p-10 mb-5 '>

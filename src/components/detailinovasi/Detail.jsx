@@ -53,18 +53,18 @@ function Detail() {
           <img className='rounded w-full h-full object-cover' src="/Hero.png" alt="" srcset="" />
         </div>
         <div className="md:w-1/2 flex flex-col gap-4">
-          <p className="text-base font-normal underline underline-offset-4">kerajinan</p>
-          <h3 className="text-3xl font-extrabold">{inovasiById.title}</h3>
+          <p className="text-base font-normal underline underline-offset-4 text-green-900">kerajinan</p>
+          <h3 className="text-3xl font-extrabold text-green-900">{inovasiById.title}</h3>
           <div className='flex items-center gap-2'>
             <div className='w-10 md:w-10 h-10 md:h-10'>
               <img className='w-full h-full rounded-full object-cover' src="/Hero.png" alt="" srcset="" />
             </div>
-            <p className='hidden sm:flex text-base font-semibold'>Tralala Lulu</p>
+            <p className='hidden sm:flex text-base font-semibold text-green-900'>Tralala Lulu</p>
           </div>
           <div className="flex flex-col gap-3">
             <div className="flex items-center justify-between">
-              <p className="text-2xl font-semibold">{kemungkinanAPI.donate.toLocaleString('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 })}</p>
-              <p className="text-base font-normal">100 Pendukung</p>
+              <p className="text-2xl font-semibold text-green-900">{kemungkinanAPI.donate.toLocaleString('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 })}</p>
+              <p className="text-base font-normal text-green-900">100 Pendukung</p>
             </div>
 
             {/* persenan */}
@@ -73,13 +73,13 @@ function Detail() {
             </div>
 
             <div className="flex items-center justify-between">
-              <p className="text-base font-normal">{persenTarget}% dari target {kemungkinanAPI.amount.toLocaleString('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 })} </p>
-              <p className="text-base font-normal">{sisaWaktu} Hari Lagi</p>
+              <p className="text-base font-normal text-green-900">{persenTarget}% dari target {kemungkinanAPI.amount.toLocaleString('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 })} </p>
+              <p className="text-base font-normal text-green-900">{sisaWaktu} Hari Lagi</p>
             </div>
           </div>
           <div className='flex gap-2'>
             <img src="/PinMap_green.svg" alt="" srcset="" />
-            <p className='text-base font-normal'>Palopo, Sulawesi Selatan</p>
+            <p className='text-base font-normal text-green-900'>Palopo, Sulawesi Selatan</p>
           </div>
           <Link to={`dukungan`}>
             <button className="bg-green-900 w-full rounded py-2 px-3.5 text-white text-md font-semibold flex items-center justify-center gap-3">
@@ -90,18 +90,16 @@ function Detail() {
             <div className="flex flex-col sm:flex-row md:flex-col xl:flex-row align-end gap-1">
               <p className="text-base font-normal">Bagikan :</p>
               <ul className='flex gap-2'>
-                <li><img src="/Facebook.svg" alt="" srcSet="" /></li>
-                <li><img src="/Facebook.svg" alt="" srcSet="" /></li>
-                <li><img src="/Facebook.svg" alt="" srcSet="" /></li>
-                <li><img src="/Facebook.svg" alt="" srcSet="" /></li>
-                <li><img src="/Facebook.svg" alt="" srcSet="" /></li>
-                <li><img src="/Facebook.svg" alt="" srcSet="" /></li>
+                <li><button><img src="/Facebook.svg" alt="" srcSet="" /></button></li>
+                <li><button><img src="/twitter.svg" alt="" srcSet="" /></button></li>
+                <li><button><img src="/instagram.svg" alt="" srcSet="" /></button></li>
+                <li><button><img src="/linkedin.svg" alt="" srcSet="" /></button></li>
               </ul>
             </div>
             <div className="flex sm:flex-row md:flex-col xl:flex-row align-end gap-1 grow items-end">
               <p className="text-base font-normal invisible">atau</p>
               <button className="bg-green-900 rounded px-3 w-full h-3/4 sm:h-full text-white text-xs font-semibold">
-                Link tautan
+                Link Tautan
               </button>
             </div>
           </div>
@@ -110,13 +108,13 @@ function Detail() {
 
       <div className="flex flex-col p-6 md:px-20 lg:px-40 lg:py-10 gap-10">
         <div className="flex flex-col gap-4">
-          <h2 className="text-2xl font-extrabold">Mengenal Lebih Dalam Inovasi yang Dihadirkan</h2>
-          <p className="text-lg font-normal">Pelajari inovasi ini secara mendalam untuk mendukungnya</p>
+          <h2 className="text-2xl font-extrabold text-green-900">Mengenal Lebih Dalam Inovasi yang Dihadirkan</h2>
+          <p className="text-lg font-normal text-green-900">Pelajari inovasi ini secara mendalam untuk mendukungnya</p>
         </div>
 
         <div className="border-b flex items-center self-stretch px-8">
           <button onClick={() => updateToggle(1)} className={`${toggleTab === 1 ? 'bg-green-900 text-white' : 'bg-white'} p-2 sm:px-16 rounded-t-lg text-lg font-semibold`}>Detail</button>
-          <button onClick={() => updateToggle(2)} className={`${toggleTab === 2 ? 'bg-green-900 text-white' : 'bg-white'} p-2 sm:px-16 rounded-t-lg text-lg font-semibold`}>Kabar Terbaru</button>
+          <button onClick={() => updateToggle(2)} className={`${toggleTab === 2 ? 'bg-green-900 text-white' : 'bg-white'} p-2 sm:px-16 rounded-t-lg text-lg font-semibold text-green-900`}>Kabar Terbaru</button>
         </div>
 
         {/* hasil dari tab */}

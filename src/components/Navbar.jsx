@@ -24,7 +24,7 @@ function Navbar() {
           </Link>
 
           <div className='flex justify-between items-center gap-x-8'>
-            <div className='hidden md:flex items-center text-base font-semibold'>
+            <div className='hidden md:flex items-center text-green-900 text-base font-bold'>
               <ul className='flex gap-x-6'>
                 <Link to={'/inovasi'}><li className='hover:underline underline-offset-8'>Daftar Inovasi Aktif</li></Link>
                 <Link to={'/ajukaninovasi'}><li className='hover:underline underline-offset-8'>Ajukan Inovasi</li></Link>

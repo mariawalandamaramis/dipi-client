@@ -20,7 +20,7 @@ const HeaderDashboard = ({ openMenu, toggleMenu }) => {
             <div className='w-10 md:w-10 h-10 md:h-10'>
               <img className='w-full h-full rounded-full object-cover' src="/Hero.png" alt="" srcset="" />
             </div>
-            <p className='hidden sm:flex text-base font-semibold'>Tralala Lulu</p>
+            <p className='hidden sm:flex text-base font-semibold'>Ajeng Setyaningsih</p>
           </div>
         </div>
       </nav>

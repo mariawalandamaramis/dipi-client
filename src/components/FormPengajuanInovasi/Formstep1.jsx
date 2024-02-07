@@ -102,7 +102,7 @@ const Formstep1 = ({ register, errors, setValue, getValues, errInputFile }) => {
             required: ' Pilih salah satu kategori ! '
           })}
             className="rounded-md border-2 p-2 text-xs w-full">
-            <option value="">Pilih katergori Inovasi</option>
+            <option value="">Pilih Kategori Inovasi</option>
             <option value="kerajinan" >Kerajinan</option>
             <option value="makanan & minuman" >Makanan & Minuman</option>
             <option value="acara" >Acara</option>

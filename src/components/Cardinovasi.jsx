@@ -11,7 +11,7 @@ const Cardinovasi = ({ addLocation, addButton, linkButton, handleButton, image, 
             <Link to={`/inovasi/${id}`}>
               <p className='text-base font-thin underline'>{category}</p>
               <h2 className='text-lg font-extrabold line-clamp-2'>{title}</h2>
-              <p className='text-base font-thin'>Oleh: Tralala Lulu</p>
+              <p className='text-base font-thin'>Oleh: Ajeng Styaningsih</p>
             </Link>
           </div>
           <div className='flex flex-col gap-2 border-t-2'>
@@ -22,7 +22,7 @@ const Cardinovasi = ({ addLocation, addButton, linkButton, handleButton, image, 
             <div>
               <Link to={`${linkButton}`}>
                 <button onClick={handleButton} className='bg-green-900 h-10 w-full rounded-lg py-4 px-3.5 text-white text-sm font-semibold flex items-center justify-center gap-3'>
-                  <p>Berikan Inoformasi Terbaru</p>
+                  <p>Berikan Informasi Terbaru</p>
                   <img src="/Arrow-right.svg" alt="" />
                 </button>
               </Link>

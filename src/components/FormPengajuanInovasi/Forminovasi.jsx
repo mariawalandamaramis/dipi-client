@@ -143,7 +143,7 @@ const Forminovasi = () => {
           FormNo === 3 && (
             <div className='mb-8 flex bg-green-950 p-2 gap-2 rounded-lg items-start'>
               <img src="/Lamp.svg" alt="" srcset="" />
-              <p className='text-sm italic text-white'>Pemberian suvenir bertujuan untuk menarik minat pendukung dan memberikan kesan spesial kepada pendukung. Tips : berikan souvenir yang bisa dikenang dan bermanfaat.</p>
+              <p className='text-sm italic text-white'>Pemberian souvenir bertujuan untuk menarik minat pendukung dan memberikan kesan spesial kepada pendukung. Tips : berikan souvenir yang bisa dikenang dan bermanfaat.</p>
             </div>
           )
         }
