@@ -1,16 +1,18 @@
-import React, { useDebugValue, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import { useDispatch, useSelector } from 'react-redux'
-import { getInovasiByIdAPI, getOpsiDukunganAPI } from '../redux/slice/inovasi-slice'
+import { getInovasiByIdAPI, getLokasiAPI, getOpsiDukunganAPI, getUsersAPI } from '../redux/slice/inovasi-slice'
 import { useParams } from 'react-router-dom'
 import Cardopsidonasi from '../components/Cardopsidonasi'
 
 const OpsiDukungan = () => {
   const { id } = useParams()
   const dispatch = useDispatch()
-  const inovasiById = useSelector((state) => state.inovasi).inovasiById
-  const OpsiDukungan = useSelector((state) => state.inovasi).paketDukungan
+  const inovasiById = useSelector((state) => state.inovasi).inovasiById.data
+  const OpsiDukungan = useSelector((state) => state.inovasi).paketDukungan.data
+  const semuaUser = useSelector((state => state.inovasi)).users
+  const semuaLokasi = useSelector((state => state.inovasi)).lokasi
   const [nominalDukungan, setNominalDukungan] = useState(0)
   const [btnClick, setBtnClick] = useState(false)
   const [msgInput, setMsgInput] = useState(false)
@@ -19,6 +21,8 @@ const OpsiDukungan = () => {
   useEffect(() => {
     dispatch(getInovasiByIdAPI(id))
     dispatch(getOpsiDukunganAPI(id))
+    dispatch(getUsersAPI)
+    dispatch(getLokasiAPI)
 
     if (btnClick) {
       if (tryReqDonation.nominal === 0 || tryReqDonation.nominal === "") { setMsgInput(true) }
@@ -47,11 +51,40 @@ const OpsiDukungan = () => {
     setMsgInput(false)
   }
 
-  const KemungkinanDataPaketDonasi = [
-    { id: 1, package_name: 'ABC_1', nominal: 1000, description: 'kursi lipat. semen 1 sak' },
-    { id: 22, package_name: 'ABC_2', nominal: 2000, description: 'monitor 3in.' },
-    { id: 35, package_name: 'ABC_3', nominal: 3000, description: 'selang biru 100 meter. sepeda roda 3' },
-  ]
+  // menampilkan nama user dari user_id yang didpt dari getInovation
+  const namaUser = {}
+  semuaUser.data?.forEach(user => {
+    namaUser[user.id] = user.name.replace(/\b\w/g, match => match.toUpperCase())
+  })
+
+  // menampilkan foto user dari user_id yang didpt dari getInovation
+  const fotoUser = {}
+  semuaUser.data?.forEach(user => {
+    fotoUser[user.id] = user.profile
+  })
+
+  // menampilkan nama kota dari city_id yang didpt dari getInovation
+  const namaKota = {}
+  semuaLokasi.data?.forEach(user => {
+    namaKota[user.city_id] = user.city_name
+  })
+
+  // menampilkan nama propinsi dari province_id yang didpt dari getInovation
+  const namaPropinsi = {}
+  semuaLokasi.data?.forEach(user => {
+    namaPropinsi[user.province_id] = user.province
+  })
+
+  const tglSemingguStlhSelesai = (duration, createdAt) => {
+    const tanggalMulai = new Date(createdAt)
+    const tanggalSelesai = new Date(tanggalMulai.getTime() + duration * 24 * 60 * 60 * 1000)
+    tanggalSelesai.setDate(tanggalSelesai.getDate() + 7);
+
+    const options = { day: 'numeric', month: 'long', year: 'numeric' };
+    return tanggalSelesai.toLocaleDateString('id-ID', options);
+  }
+
+  console.log(OpsiDukungan[0].nominal)
 
 
   return (
@@ -60,12 +93,12 @@ const OpsiDukungan = () => {
 
       <div className='flex flex-col gap-4 bg-green-900 text-white p-6 md:px-20 lg:px-40 lg:py-16'>
         <p className='text-base font-semibold'>Kamu memilih untuk menjadi pendukung inovasi :</p>
-        <h3 className='text-4xl font-extrabold'>{inovasiById.title}</h3>
+        <h3 className='text-4xl font-extrabold'>{inovasiById.inovation_name.replace(/\b\w/g, match => match.toUpperCase())}</h3>
         <div className='flex items-center gap-2'>
           <div className='w-10 md:w-10 h-10 md:h-10'>
-            <img className='w-full h-full rounded-full object-cover' src="/Hero.png" alt="" srcset="" />
+            <img className='w-full h-full rounded-full object-cover' src={fotoUser[inovasiById.user_id]} alt="" srcset="" />
           </div>
-          <p className='flex text-base font-semibold'>Tralala Lulu</p>
+          <p className='flex text-base font-semibold'>{namaUser[inovasiById.user_id]}</p>
         </div>
       </div>
 
@@ -128,13 +161,16 @@ const OpsiDukungan = () => {
         </div>
 
         <div className='grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5'>
-          {KemungkinanDataPaketDonasi.map((data, idx) => (
+          {OpsiDukungan.map((data, idx) => (
             <Cardopsidonasi
               key={data.id}
               sovenir={idx + 1}
-              nominal={data.nominal}
+              nominal={data.nominal.toLocaleString('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 })}
               description={data.description}
-              title={inovasiById.title}
+              inovation_name={inovasiById.inovation_name}
+              kota={namaKota[inovasiById.city_id]}
+              propinsi={namaPropinsi[inovasiById.province_id]}
+              estimasipengiriman={tglSemingguStlhSelesai(inovasiById.duration, inovasiById.createdAt)}
               onClick={() => handleClikDukung({
                 type: 1,
                 nominal: data.nominal,

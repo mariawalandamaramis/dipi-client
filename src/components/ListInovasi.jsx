@@ -2,35 +2,54 @@ import React, { useEffect, useState } from 'react';
 import Cardinovasi from './Cardinovasi';
 import Select from 'react-select';
 import { useDispatch, useSelector } from 'react-redux';
-import { getKategoriAPI, getSemuaInovasiAPI } from '../redux/slice/inovasi-slice';
-
-// contoh API, nanti diganti
-// https://api.escuelajs.co/api/v1/products
-// https://api.escuelajs.co/api/v1/categories
+import { getKategoriAPI, getLokasiAPI, getSemuaInovasiAPI, getUsersAPI } from '../redux/slice/inovasi-slice';
 
 function ListInovasi() {
   const dispatch = useDispatch()
   const semuaInovasi = useSelector((state) => state.inovasi).inovasi
-  const kategoriInovasi = useSelector((state) => state.inovasi).kategori
+  const semuaKategori = useSelector((state) => state.inovasi).kategori
+  const semuaUser = useSelector((state => state.inovasi)).users
+  const semuaLokasi = useSelector((state => state.inovasi)).lokasi
   const [selectedCategory, setSelectedCategory] = useState(null)
+  const [selectedLocation, setSelectedLocation] = useState(null)
   const [selectSort, setSelectSort] = useState(null)
 
-  const CategoryOptions = kategoriInovasi.map((data) => ({
-    value: data.name,
-    label: data.name
+
+  const CategoryOptions = semuaKategori.data?.map((data) => ({
+    value: data.id,
+    label: data.category_name
+  }))
+
+  const kotaYangAdaById = semuaInovasi?.map(city => city.city_id)
+  const kotaYangAda = kotaYangAdaById.map(cityId => {
+    const city = semuaLokasi.data?.find(c => parseInt(c.city_id) === cityId)
+    // console.log(city)
+    return {
+      city_id: cityId,
+      city_name: city ? city.city_name : ''
+    }
+  })
+
+  const LocationOptions = kotaYangAda.map((data) => ({
+    value: data.city_id,
+    label: data.city_name
   }))
 
   const resultFilterSelected = () => {
     let filterData = [...semuaInovasi];
 
     if (selectSort && selectSort.value === 'terbaru') {
-      filterData = filterData.sort((a, b) => new Date(b.price) - new Date(a.price));
+      filterData = filterData.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     } else if (selectSort && selectSort.value === 'terlama') {
-      filterData = filterData.sort((a, b) => new Date(a.price) - new Date(b.price));
+      filterData = filterData.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
     }
 
     filterData = selectedCategory ? filterData.filter((data) => {
-      return data.category.name === selectedCategory.value;
+      return data.category_id === selectedCategory.value;
+    }) : filterData;
+
+    filterData = selectedLocation ? filterData.filter((data) => {
+      return data.city_id === selectedLocation.value;
     }) : filterData;
 
     return filterData;
@@ -41,9 +60,55 @@ function ListInovasi() {
     { value: 'terlama', label: 'terlama' },
   ]
 
+  // menampilkan nama user dari user_id yang didpt dari getInovation
+  const namaUser = {}
+  semuaUser.data?.forEach(user => {
+    namaUser[user.id] = user.name.replace(/\b\w/g, match => match.toUpperCase())
+  })
+
+  // menampilkan kategori dari category_id yang didpt dari getInovation
+  const namaKategori = {}
+  semuaKategori.data?.forEach(kategori => {
+    namaKategori[kategori.id] = kategori.category_name
+  })
+
+  // hitung sisa hari
+  const sisaHari = (duration, createdAt) => {
+    const dateNow = new Date()
+    const dateStart = new Date(createdAt)
+
+    const jmlHariBerjalan = dateNow.getTime() - dateStart.getTime()
+    const jmlHariBerjalan_convert = Math.ceil(jmlHariBerjalan / (1000 * 3600 * 24))
+    const sisaHari = duration - jmlHariBerjalan_convert
+
+    return sisaHari
+  }
+
+  // hitung persentase target pendanaan
+  const persenTarget = (amount, donate) => {
+    if (amount <= 0) { return 0 }
+    const persentase = Math.round((donate / amount) * 100)
+    return persentase
+  }
+
+  // menampilkan nama kota dari city_id yang didpt dari getInovation
+  const namaKota = {}
+  semuaLokasi.data?.forEach(user => {
+    namaKota[user.city_id] = user.city_name
+  })
+
+  // menampilkan nama propinsi dari province_id yang didpt dari getInovation
+  const namaPropinsi = {}
+  semuaLokasi.data?.forEach(user => {
+    namaPropinsi[user.province_id] = user.province
+  })
+
+
   useEffect(() => {
     dispatch(getSemuaInovasiAPI)
     dispatch(getKategoriAPI)
+    dispatch(getUsersAPI)
+    dispatch(getLokasiAPI)
   }, [])
 
   return (
@@ -61,11 +126,13 @@ function ListInovasi() {
               onChange={(selectOption) => setSelectedCategory(selectOption)}
               value={selectedCategory}
             />
-            <select className="rounded-md border-2 p-2 text-xs w-full md:w-[140px] xl:w-[240px]">
-              <option value="">Lokasi (kota)</option>
-              <option value="Palopo" >Palopo</option>
-              <option value="Sumedang" >Sumedang</option>
-            </select>
+            <Select className="rounded-md text-xs w-full md:w-[140px] xl:w-[240px]"
+              options={LocationOptions}
+              isClearable
+              placeholder='Lokasi'
+              onChange={(selectOption) => setSelectedLocation(selectOption)}
+              value={selectedLocation}
+            />
           </div>
 
           <div className='flex gap-6 items-center'>
@@ -93,11 +160,15 @@ function ListInovasi() {
             <Cardinovasi
               key={data.id}
               addLocation={true}
-              image={data.images[0]}
-              category={data.category.name}
-              title={data.title}
-              time={data.price}
+              image={data.image}
+              catagory_id={namaKategori[data.category_id]}
+              inovation_name={data.inovation_name.replace(/\b\w/g, match => match.toUpperCase())}
               id={data.id}
+              user_name={namaUser[data.user_id]}
+              time={sisaHari(data.duration, data.createdAt)}
+              persenTarget={persenTarget(data.amount, 100)}
+              kota={namaKota[data.city_id]}
+              propinsi={namaPropinsi[data.province_id]}
             />
           ))}
         </div>

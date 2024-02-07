@@ -2,11 +2,14 @@ import React, { useEffect } from 'react'
 import Cardinovasi from './Cardinovasi'
 import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { getSemuaInovasiAPI } from '../redux/slice/inovasi-slice'
+import { getKategoriAPI, getLokasiAPI, getSemuaInovasiAPI, getUsersAPI } from '../redux/slice/inovasi-slice'
 
 const Spillcardinovasi = () => {
   const dispatch = useDispatch()
   const semuaInovasi = useSelector((state) => state.inovasi).inovasi
+  const semuaLokasi = useSelector((state => state.inovasi)).lokasi
+  const semuaUser = useSelector((state => state.inovasi)).users
+  const semuaKategori = useSelector((state => state.inovasi)).kategori
 
   // ambil acak inovasi sebanyak 6 object
   const ambilAcak = (array, n) => {
@@ -19,11 +22,57 @@ const Spillcardinovasi = () => {
     }
     return acakArray.slice(0, n)
   }
-  
+
   const beberapaInovasi = ambilAcak(semuaInovasi, 6)
+
+  // menampilkan nama user dari user_id yang didpt dari getInovation
+  const namaUser = {}
+  semuaUser.data?.forEach(user => {
+    namaUser[user.id] = user.name.replace(/\b\w/g, match => match.toUpperCase())
+  })
+
+  // menampilkan kategori dari category_id yang didpt dari getInovation
+  const namaKategori = {}
+  semuaKategori.data?.forEach(kategori => {
+    namaKategori[kategori.id] = kategori.category_name
+  })
+
+  // menampilkan nama kota dari city_id yang didpt dari getInovation
+  const namaKota = {}
+  semuaLokasi.data?.forEach(user => {
+    namaKota[user.city_id] = user.city_name
+  })
+
+  // menampilkan nama propinsi dari province_id yang didpt dari getInovation
+  const namaPropinsi = {}
+  semuaLokasi.data?.forEach(user => {
+    namaPropinsi[user.province_id] = user.province
+  })
+
+  // hitung sisa hari
+  const sisaHari = (duration, createdAt) => {
+    const dateNow = new Date()
+    const dateStart = new Date(createdAt)
+
+    const jmlHariBerjalan = dateNow.getTime() - dateStart.getTime()
+    const jmlHariBerjalan_convert = Math.ceil(jmlHariBerjalan / (1000 * 3600 * 24))
+    const sisaHari = duration - jmlHariBerjalan_convert
+
+    return sisaHari
+  }
+
+  // hitung persentase target pendanaan
+  const persenTarget = (amount, donate) => {
+    if (amount <= 0) { return 0 }
+    const persentase = Math.round((donate / amount) * 100)
+    return persentase
+  }
 
   useEffect(() => {
     dispatch(getSemuaInovasiAPI)
+    dispatch(getUsersAPI)
+    dispatch(getKategoriAPI)
+    dispatch(getLokasiAPI)
   }, [])
 
   return (
@@ -38,11 +87,15 @@ const Spillcardinovasi = () => {
             <Cardinovasi
               key={data.id}
               addLocation={true}
-              image={data.images[0]}
-              category={data.category.name}
-              title={data.title}
-              time={data.price}
+              image={data.image}
+              catagory_id={namaKategori[data.category_id]}
+              inovation_name={data.inovation_name.replace(/\b\w/g, match => match.toUpperCase())}
               id={data.id}
+              user_name={namaUser[data.user_id]}
+              time={sisaHari(data.duration, data.createdAt)}
+              persenTarget={persenTarget(data.amount, 1000)}
+              kota={namaKota[data.city_id]}
+              propinsi={namaPropinsi[data.province_id]}
             />
           ))}
         </div>

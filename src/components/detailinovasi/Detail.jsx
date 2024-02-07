@@ -3,31 +3,32 @@ import { Link, useParams } from "react-router-dom";
 import DetailDesc from "./DetailDesc";
 import KabarbaruDesc from "./KabarbaruDesc";
 import { useDispatch, useSelector } from "react-redux";
-import { getArtikelAPI, getInovasiByIdAPI } from "../../redux/slice/inovasi-slice";
+import { getArtikelAPI, getInovasiByIdAPI, getKategoriAPI, getLokasiAPI, getUsersAPI } from "../../redux/slice/inovasi-slice";
 
 function Detail() {
   const { id } = useParams()
   const dispatch = useDispatch()
-  const inovasiById = useSelector((state) => state.inovasi).inovasiById
+  const inovasiById = useSelector((state) => state.inovasi).inovasiById.data
   const artikelByIdInovasi = useSelector((state) => state.inovasi).artikel
+  const semuaKategori = useSelector((state => state.inovasi)).kategori
+  const semuaUser = useSelector((state => state.inovasi)).users
+  const semuaLokasi = useSelector((state => state.inovasi)).lokasi
   const [toggleTab, setToggleTab] = useState(1)
   const updateToggle = (idTab) => { setToggleTab(idTab) }
 
-  console.log(artikelByIdInovasi)
-
   useEffect(() => {
     dispatch(getInovasiByIdAPI(id))
-    dispatch(getArtikelAPI(1)) // nanti diganti id inovasi / id dari params
+    dispatch(getArtikelAPI(id)) // nanti diganti id inovasi / id dari params
+    dispatch(getKategoriAPI)
+    dispatch(getUsersAPI)
+    dispatch(getLokasiAPI)
   }, [])
 
   const kemungkinanAPI = {
-    amount: 5000000,
-    donate: 90000,
-    duration: 100,
-    cratedAT: "2024-01-15T13:23:55.062Z"
+    donate: 1000000,
   }
 
-  const persenTarget = Math.round((kemungkinanAPI.donate / kemungkinanAPI.amount) * 100)
+  const persenTarget = Math.round((kemungkinanAPI.donate / inovasiById.amount) * 100)
 
   // sisa hari 
   // durasi - (jml hari yang sudah dilalui)
@@ -35,31 +36,63 @@ function Detail() {
   // waktu saat ini - waktu saat mulai 
 
   const dateNow = new Date()
-  const dateStart = new Date(kemungkinanAPI.cratedAT)
+  const dateStart = new Date(inovasiById.createdAt)
 
   const jmlHariBerjalan = dateNow.getTime() - dateStart.getTime()
   const jmlHariBerjalan_convert = Math.ceil(jmlHariBerjalan / (1000 * 3600 * 24))
-  const sisaWaktu = kemungkinanAPI.duration - jmlHariBerjalan_convert
+  const sisaWaktu = inovasiById.duration - jmlHariBerjalan_convert
 
   // format tanggal
   const optionFormatDate = { year: 'numeric', month: 'long', day: 'numeric' }
   const formatDate = dateStart.toLocaleDateString('id-ID', optionFormatDate)
+
+  // menampilkan kategori dari category_id yang didpt dari getInovation
+  const namaKategori = {}
+  semuaKategori.data?.forEach(kategori => {
+    namaKategori[kategori.id] = kategori.category_name
+  })
+
+  // menampilkan nama user dari user_id yang didpt dari getInovation
+  const namaUser = {}
+  semuaUser.data?.forEach(user => {
+    namaUser[user.id] = user.name.replace(/\b\w/g, match => match.toUpperCase())
+  })
+
+  // menampilkan foto user dari user_id yang didpt dari getInovation
+  const fotoUser = {}
+  semuaUser.data?.forEach(user => {
+    fotoUser[user.id] = user.profile
+  })
+
+  console.log(inovasiById)
+
+  // menampilkan nama kota dari city_id yang didpt dari getInovation
+  const namaKota = {}
+  semuaLokasi.data?.forEach(user => {
+    namaKota[user.city_id] = user.city_name
+  })
+
+  // menampilkan nama propinsi dari province_id yang didpt dari getInovation
+  const namaPropinsi = {}
+  semuaLokasi.data?.forEach(user => {
+    namaPropinsi[user.province_id] = user.province
+  })
 
 
   return (
     <>
       <div className="flex flex-col md:flex-row p-6 md:px-20 lg:px-40 lg:py-10 gap-10">
         <div className="w-[54%] max-md:w-full">
-          <img className='rounded w-full h-full object-cover' src="/Hero.png" alt="" srcset="" />
+          <img className='rounded w-full h-full object-cover' src={inovasiById.image || '/BlankData.jpg'} alt="" srcset="" />
         </div>
         <div className="md:w-1/2 flex flex-col gap-4">
-          <p className="text-base font-normal underline underline-offset-4">kerajinan</p>
-          <h3 className="text-3xl font-extrabold">{inovasiById.title}</h3>
+          <p className="text-base font-normal underline underline-offset-4">{namaKategori[inovasiById.category_id]}</p>
+          <h3 className="text-3xl font-extrabold">{inovasiById.inovation_name.replace(/\b\w/g, match => match.toUpperCase())}</h3>
           <div className='flex items-center gap-2'>
             <div className='w-10 md:w-10 h-10 md:h-10'>
-              <img className='w-full h-full rounded-full object-cover' src="/Hero.png" alt="" srcset="" />
+              <img className='w-full h-full rounded-full object-cover' src={fotoUser[inovasiById.user_id]} alt="" srcset="" />
             </div>
-            <p className='hidden sm:flex text-base font-semibold'>Tralala Lulu</p>
+            <p className='hidden sm:flex text-base font-semibold'>{namaUser[inovasiById.user_id]}</p>
           </div>
           <div className="flex flex-col gap-3">
             <div className="flex items-center justify-between">
@@ -73,13 +106,13 @@ function Detail() {
             </div>
 
             <div className="flex items-center justify-between">
-              <p className="text-base font-normal">{persenTarget}% dari target {kemungkinanAPI.amount.toLocaleString('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 })} </p>
+              <p className="text-base font-normal">{persenTarget}% dari target {inovasiById.amount.toLocaleString('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 })} </p>
               <p className="text-base font-normal">{sisaWaktu} Hari Lagi</p>
             </div>
           </div>
           <div className='flex gap-2'>
             <img src="/PinMap_green.svg" alt="" srcset="" />
-            <p className='text-base font-normal'>Palopo, Sulawesi Selatan</p>
+            <p className='text-base font-normal'>{namaKota[inovasiById.city_id]}, {namaPropinsi[inovasiById.province_id]}</p>
           </div>
           <Link to={`dukungan`}>
             <button className="bg-green-900 w-full rounded py-2 px-3.5 text-white text-md font-semibold flex items-center justify-center gap-3">
@@ -128,12 +161,15 @@ function Detail() {
           </div>
 
           <div className={`${toggleTab === 2 ? 'visible' : 'hidden'} flex flex-col gap-8`}>
-            {artikelByIdInovasi.map((data, idx) => (
+            {artikelByIdInovasi.data?.map((data, idx) => (
               <KabarbaruDesc
                 key={data.id}
-                artikelKe={idx + 1}
-                name={data.name}
-                description={data.body}
+                artikelKe={artikelByIdInovasi.data.length - idx}
+                name={namaUser[inovasiById.user_id]}
+                foto={fotoUser[inovasiById.user_id]}
+                title={'Judul kabar informasi terbaru'}
+                description={data.description}
+                created={new Date(data.createdAt).toLocaleDateString('id-ID', optionFormatDate)}
               />
             ))}
             <div className="py-10 text-base md:text-2xl text-center font-semibold bg-green-900 text-white rounded-lg">
