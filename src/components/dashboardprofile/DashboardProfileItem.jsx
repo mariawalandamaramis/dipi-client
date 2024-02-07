@@ -1,184 +1,234 @@
-import React, { useState, useEffect } from "react";
-import { useForm } from "react-hook-form";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
-import { postRegister } from "../../redux/slice/register-slice";
-import { getResponInput } from "../../redux/slice/register-slice";
+import { getLokasiAPI, getUserByIdAPI, postImageAPI, putUpdateProfile } from "../../redux/slice/profile-slice";
+import Cookies from "js-cookie";
 import withReactContent from "sweetalert2-react-content";
 import Swal from "sweetalert2";
 
 const DashboardProfileItem = () => {
-    const dispatch = useDispatch()
-    const navigate = useNavigate()
-    const resultResponRegister = useSelector((state) => state.register).responRegister
+  const dispatch = useDispatch()
+  const [pilihImg, setPilihImg] = useState('')
+  const userById = useSelector(state => state.profile).userById.data
+  const semuaLokasi = useSelector(state => state.profile).lokasi.data
+  const message = useSelector(state => state.profile).message
+  const dataImage = useSelector(state => state.profile).dataImage.data
+  const [postToApi, setPostToAPi] = useState({})
+  const userId = JSON.parse(Cookies.get('responLogin')).user.id
 
-    const {
-        register,
-        handleSubmit,
-        formState: { errors }
-    } = useForm()
+  useEffect(() => {
+    dispatch(getUserByIdAPI(1))
+    dispatch(getLokasiAPI)
+  }, [])
 
-    const onSubmit = (data) => {
-        // console.log(data)
-        dispatch(postRegister(data))
+  const handleUploadImg = (e) => {
+    const fileImg = e.target.files[0]
+    dispatch(postImageAPI(fileImg))
+    const reader = new FileReader()
+
+    reader.onload = () => {
+      setPilihImg(reader.result)
     }
 
-    const clearMessageAPI = () => {
-        dispatch(getResponInput({}))
+    if (fileImg) {
+      reader.readAsDataURL(fileImg)
     }
+  }
 
-    const alertSucces = () => {
-        withReactContent(Swal).fire({
-            position: "center",
-            icon: "success",
-            title: "Registrasi Berhasil. Silahkah Login terlebih dahulu.",
-            showConfirmButton: false,
-            timer: 1500
-        })
-    }
+  const propinsiMap = new Map();
 
-    useEffect(() => {
-        if (resultResponRegister.user) {
-            alertSucces()
-            setTimeout(() => {
-                dispatch(getResponInput({}))
-                navigate('/login')
-            }, 1500)
-        }
+  if (semuaLokasi) {
+    Object.values(semuaLokasi).forEach(data => {
+      if (!propinsiMap.has(data.province_id)) {
+        propinsiMap.set(data.province_id, {
+          province_id: data.province_id,
+          province: data.province
+        });
+      }
+    });
+  }
+  const propinsi = Array.from(propinsiMap.values());
+
+  const [selectedProvince, setSelectedProvince] = useState('');
+  const [selectedKota, setSelectedKota] = useState([]);
+
+  const handleProvinceChange = (event) => {
+    const selectedValue = event.target.value;
+    setSelectedProvince(selectedValue);
+    const filteredKota = semuaLokasi.filter(kota => parseInt(kota.province_id) === parseInt(selectedValue));
+    setSelectedKota(filteredKota);
+  };
+
+  const handleCityChange = (e) => {
+    setPostToAPi(prev => ({ ...prev, location: e.target.value }));
+    setPostToAPi(prev => ({ ...prev, profile: dataImage }));
+  }
+
+  const handleBioChange = (e) => {
+    setPostToAPi(prev => ({ ...prev, bio: e.target.value }));
+    setPostToAPi(prev => ({ ...prev, profile: dataImage }));
+  }
+
+  const alertSucces = () => {
+    withReactContent(Swal).fire({
+      position: "center",
+      icon: "success",
+      title: "Profil berhasil diperbarui",
+      showConfirmButton: false,
+      timer: 1500
     })
+  }
 
-    return (
-        <>
-            <div className="flex flex-col items-stretch px-8 py-11 bg-zinc-50 max-md:px-5">
-                <div className="text-4xl font-semibold tracking-tighter leading-10 text-zinc-800 max-md:max-w-full">
-                    Profil
-                </div>
-                <div className="p-6 mt-6 max-md:px-5 max-md:max-w-full">
-                    <div className="flex gap-5 max-md:flex-col max-md:gap-0 max-md:items-stretch">
-                        <div className="flex flex-col items-stretch w-3/12 max-md:ml-0 max-md:w-full">
-                            <div className="flex flex-col justify-center items-stretch max-md:mt-10">
-                                <div className="flex flex-col justify-center items-stretch bg-red-300 rounded-lg">
-                                    <img
-                                        loading="lazy"
-                                        srcSet="..."
-                                        className="object-center w-full aspect-[1.16]"
-                                    />
-                                </div>
-                                <div className="flex gap-3 justify-between items-stretch mt-5">
-                                    <div className="flex gap-1 justify-between items-stretch px-5 py-3.5 text-sm font-semibold leading-5 text-center text-white whitespace-nowrap bg-emerald-900 rounded-md shadow-sm">
-                                        <img
-                                            loading="lazy"
-                                            src="../plus-svgrepo-com.svg"
-                                            className="object-center w-2.5 aspect-square fill-zinc-50"
-                                        />
-                                        <button className="grow">Unggah foto baru</button>
-                                    </div>
-                                    <button className="flex flex-col justify-center items-center px-3 py-3.5 bg-emerald-900 rounded-md shadow-sm aspect-[1.37]">
-                                        <img
-                                            
-                                            src="../trash-alt-svgrepo-com.svg"
-                                            className=""
-                                        />
-                                    </button>
-                                   
-                                </div>
-                            </div>
-                        </div>
-                        <div className="flex flex-col items-stretch ml-5 w-9/12 max-md:ml-0 max-md:w-full">
-                            <div className="flex flex-col grow items-stretch max-md:mt-10 max-md:max-w-full">
-                                <div className="flex flex-col justify-center items-stretch text-xl font-semibold tracking-tight leading-8 rounded-lg border-2 border-solid border-zinc-100 text-zinc-900 max-md:max-w-full">
-                                    <div className="flex gap-4 justify-between items-stretch max-md:flex-wrap max-md:max-w-full">
-                                        <div className="flex flex-col w-4 h-8 bg-fuchsia-300 rounded" />
-                                        <div className="grow max-md:max-w-full">Informasi Profil</div>
-                                    </div>
-                                </div>
-                                <form onSubmit={handleSubmit(onSubmit)}>
-                                    <div className="flex flex-col items-stretch px-8 py-10 mt-8 text-xs leading-5 rounded-lg border border-solid border-slate-500 text-slate-500 max-md:px-5 max-md:max-w-full">
-                                        <div className="text-sm leading-5 max-md:max-w-full">
-                                            Nama Lengkap
+  const handleSubmitProfile = () => {
+    dispatch(putUpdateProfile(postToApi, userId))
+    if (message === 'Update user successfully') {
+      alertSucces()
+    }
+  }
 
-                                        </div>
-                                        <input {...register('name', {
-                                            required: ' Nama harus diisi ! ',
-                                            onChange: clearMessageAPI,
-                                        })} type="text" name="name" className="justify-center items-start py-3.5 pr-16 pl-3 mt-3 text-emerald-900 whitespace-nowrap bg-white rounded-md border border-solid shadow-sm border-[color:var(--Neutral-colors-300,#F1F3F7)] max-md:pr-5 max-md:max-w-full" placeholder="Isi Nama Lengkap Anda"
-                                        />
-                                        <div className="mt-8 text-sm leading-5 max-md:max-w-full">
-                                            Email
-                                        </div>
-                                        <input type="text" {...register('email', {
-                                            required: ' Email harus diisi ! ',
-                                            pattern: {
-                                                value: /^[^@ ]+@[^@ ]+\.[^@ .]{2,}$/,
-                                                message: 'Isi email dengan benar !'
-                                            },
-                                            onChange: clearMessageAPI,
-                                        })} className="justify-center items-start py-3.5 pr-16 pl-3 mt-3 text-emerald-900 whitespace-nowrap bg-white rounded-md border border-solid shadow-sm border-[color:var(--Neutral-colors-300,#F1F3F7)] max-md:pr-5 max-md:max-w-full" placeholder="Email" />
-                                        <div className="mt-8 text-sm leading-5 max-md:max-w-full">
-                                            Password
-                                        </div>
-                                        <input type="password" {...register('password', {
-                                            required: "Password harus diisi !",
-                                            onChange: clearMessageAPI,
-                                        })} className="justify-center items-start py-3.5 pr-16 pl-3 mt-3 text-emerald-900 whitespace-nowrap bg-white rounded-md border border-solid shadow-sm border-[color:var(--Neutral-colors-300,#F1F3F7)] max-md:pr-5 max-md:max-w-full" placeholder="*****"/>
-                                    </div>
-                                    <div className="mt-8 text-sm leading-5 max-md:max-w-full">
-                                        Bio
-                                    </div>
-                                    <input type="text" {...register('bio', {
-                                        required: "Bio Harus diisi !",
-                                        onChange: clearMessageAPI,
-                                    })} className="justify-center items-start py-3.5 pr-16 pl-3 mt-3 text-emerald-900 whitespace-nowrap bg-white rounded-md border border-solid shadow-sm border-[color:var(--Neutral-colors-300,#F1F3F7)] max-md:pr-5 max-md:max-w-full" placeholder="Usaha yang sedang anda jalani" />
-                                    <div className="mt-8 text-sm leading-5 max-md:max-w-full">
-                                        Lokasi
-                                    </div>
-                                    <div className="flex gap-3 justify-between items-stretch mt-3 text-emerald-900 whitespace-nowrap max-md:flex-wrap max-md:max-w-full">
-                                        <input type="text" {...register('city', {
-                                        required: "Kota harus diisi !",
-                                        onChange: clearMessageAPI,
-                                    })} className="grow justify-center items-start py-3.5 pr-16 pl-3 bg-white rounded-md border border-solid shadow-sm border-[color:var(--Neutral-colors-300,#F1F3F7)] max-md:pr-5" placeholder="Kota" />
-                                        <input type="text" {...register('provinci', {
-                                        required: "Provinsi Harus di Isi !",
-                                        onChange: clearMessageAPI,
-                                    })} className="grow justify-center items-start py-3.5 pr-16 pl-3 bg-white rounded-md border border-solid shadow-sm border-[color:var(--Neutral-colors-300,#F1F3F7)] max-md:pr-5" placeholder="Provinsi"/>
-                                    </div>
-                                    <div className="mt-8 text-sm leading-5 max-md:max-w-full">
-                                        Alamat Lengkap
-                                    </div>
-                                    <input type="text" {...register('address', {
-                                        required: "Anda Belum Melengkapi Alamat !",
-                                        onChange: clearMessageAPI,
-                                    })} className="justify-center items-start py-3.5 pr-16 pl-3 mt-3 text-emerald-900 whitespace-nowrap bg-white rounded-md border border-solid shadow-sm border-[color:var(--Neutral-colors-300,#F1F3F7)] max-md:pr-5 max-md:max-w-full" placeholder="Lengkapi Alamat" />
-                                    <div className="mt-3 text-xs italic font-extralight leading-5 text-black max-md:max-w-full">
-                                        alamat tidak akan di tampilkan di halaman utama, hanya akan
-                                        digunakan untuk melengkapi data jika memilih paket pendukung
-                                        hebat
-                                    </div>
-                                    <div className="mt-8 text-sm leading-5 max-md:max-w-full">
-                                        Nomor Telepon
-                                    </div>
-                                    <input type="text" {...register('no', {
-                                        required: "No Telp Harus di isi ",
-                                        onChange: clearMessageAPI,
-                                    })} className="justify-center items-start py-3.5 pr-16 pl-3 mt-3 text-emerald-900 whitespace-nowrap bg-white rounded-md border border-solid shadow-sm border-[color:var(--Neutral-colors-300,#F1F3F7)] max-md:pr-5 max-md:max-w-full" placeholder="Nomor yang bisa dihubungi" />
-                                    <div className="mt-3 text-xs italic font-extralight leading-5 text-black max-md:max-w-full">
-                                        nomor telepon tidak akan di tampilkan di halaman utama, hanya
-                                        akan digunakan untuk melengkapi data jika memilih paket
-                                        pendukung hebat
-                                    </div>
-                                    <button type="submit" className="text-white text-center text-sm font-semibold leading-5 whitespace-nowrap justify-center items-center shadow-sm bg-emerald-900 mt-10 px-16 py-3.5 rounded-md max-md:max-w-full max-md:px-5">
-                                        Edit
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
+  // cari nama propinsi berdasarkan city_id
+  let namaPropinsi = {}
+  let namaKota = {}
+  semuaLokasi.forEach(loc => {
+    namaPropinsi[loc.city_id] = loc.province,
+      namaKota[loc.city_id] = loc.city_name
+  })
+
+
+  // console.log(Object.keys(postToApi))
+
+  return (
+    <>
+      <div>
+        {!userById ? (<><h1>loading..</h1></>) : (
+
+          <div className="flex flex-col gap-6">
+            <h2 className='text-4xl font-semibold'>Profil</h2>
+
+            <form>
+              <div className="flex flex-col md:flex-row p-6 gap-10">
+                {/* foto */}
+                <div className="flex flex-col gap-5">
+                  <div className="h-48 w-56 rounded-lg bg-slate-500">
+                    <img className="rounded-lg w-full h-full object-cover" src={userById.profile || dataImage || '/profile.svg'} alt="" />
+                  </div>
+                  <div className="flex gap-4">
+                    <div>
+                      <input type="file" id="upload-img" className="hidden" onChange={handleUploadImg} />
+                      <label htmlFor="upload-img" className="bg-green-900 text-white font-semibold text-sm py-3 px-2 md:px-5 cursor-pointer rounded-lg flex gap-1" >
+                        <img src="/add.svg" />
+                        <p>Unggah foto baru</p>
+                      </label>
                     </div>
-                </div >
-            </div >
-        </>
+                    <button type="button" onClick={() => setPilihImg('')} className="bg-green-900 flex items-center justify-center rounded-lg px-2 md:grow">
+                      <img src="/trash.svg" alt="" />
+                    </button>
+                  </div>
+                </div>
+
+                {/* info profil */}
+                <div className="flex flex-col gap-8 w-full">
+                  <div className='flex gap-4 border rounded-lg'>
+                    <div className='w-4 rounded bg-pink-400'></div>
+                    <h3 className='text-xl font-semibold p-1'>Informasi Profil</h3>
+                  </div>
+                  <div className="border border-green-900 rounded-lg py-10 px-8 flex flex-col gap-7">
+                    <div>
+                      <label>Nama</label>
+                      <input type="text" className="w-full rounded-md border-2 p-2 text-xs font-normal" placeholder={userById.name} disabled />
+                    </div>
+                    <div>
+                      <label>Email</label>
+                      <input type="text" className="w-full rounded-md border-2 p-2 text-xs font-normal" placeholder={userById.email} disabled />
+                    </div>
+                    <div>
+                      <label>Password</label>
+                      <input type="password" className="w-full rounded-md border-2 p-2 text-xs font-normal" value={userById.password} disabled />
+                    </div>
+                    <div>
+                      <label>Bio</label>
+                      <textarea defaultValue={userById.bio} onChange={handleBioChange} type="text" className="w-full rounded-md border-2 p-2 text-xs font-normal" />
+                    </div>
+                    <div>
+                      <label>Lokasi</label>
+                      <div className="flex gap-4">
+                        <select
+                          defaultValue={namaPropinsi[userById.location]}
+                          value={selectedProvince}
+                          placeholder='pilih'
+                          onChange={handleProvinceChange}
+                          type="text" className="w-full rounded-md border-2 p-2 text-xs font-normal">
+                          <option value="" disabled selected hidden>
+                            {userById.location ? (namaPropinsi[userById.location]) : ('Pilih propinsi')}
+                          </option>
+                          {propinsi.map(propinsi => (
+                            <option key={propinsi.province_id} value={propinsi.province_id} >{propinsi.province}</option>
+                          ))}
+                        </select>
+
+                        <select onChange={handleCityChange} type="text" className="w-full rounded-md border-2 p-2 text-xs font-normal">
+                          <option value="" disabled selected hidden>
+                            {userById.location ? (namaKota[userById.location]) : ('Pilih kota')}
+                          </option>
+                          {selectedKota.map(kota => (
+                            <option key={kota.city_id} value={kota.city_id} >{kota.city_name}</option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+                    <div>
+                      <div className="flex">
+                        <label>Alamat lengkap</label>
+                        <div className="relative flex flex-col group grow">
+                          <svg className="w-5 h-5 ms-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" fill="#052e16" />
+                          </svg>
+                          <div className="absolute bottom-0 flex-col items-center mb-6 group-hover:flex hidden">
+                            <span className="relative z-10 p-2 text-xs leading-none text-white whitespace-no-wrap bg-green-900 rounded-lg w-full">Pengisian pada data ini bersifat opsional.</span>
+                            <div className="w-3 h-3 -mt-2 mr-40 rotate-45 bg-green-900"></div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <input type="text" className="w-full rounded-md border-2 p-2 text-xs font-normal" />
+                      <p className="text-[11px] italic font-light">alamat tidak akan di tampilkan di halaman utama, hanya akan digunakan untuk melengkapi data jika memilih paket pendukung hebat</p>
+                    </div>
+                    <div>
+                      <div className="flex">
+                        <label>Nomor Telepon</label>
+                        <div className="relative flex flex-col group grow">
+                          <svg className="w-5 h-5 ms-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" fill="#052e16" />
+                          </svg>
+                          <div className="absolute bottom-0 flex-col items-center mb-6 group-hover:flex hidden">
+                            <span className="relative z-10 p-2 text-xs leading-none text-white whitespace-no-wrap bg-green-900 rounded-lg w-full">Pengisian pada data ini bersifat opsional.</span>
+                            <div className="w-3 h-3 -mt-2 mr-40 rotate-45 bg-green-900"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <input type="text" className="w-full rounded-md border-2 p-2 text-xs font-normal" />
+                      <p className="text-[11px] italic font-light">nomor telepon tidak akan di tampilkan di halaman utama, hanya akan digunakan untuk melengkapi data jika memilih paket pendukung hebat</p>
+                    </div>
+                    <button
+                      type="button"
+                      // disabled={Object.keys(postToApi).length === 3 ? 'false' : 'true'}
+                      onClick={handleSubmitProfile}
+                      // className={`${Object.keys(postToApi).length === 3 ? 'bg-green-900' : 'bg-slate-500'} text-white font-semibold text-sm py-3 px-5 w-max rounded-lg`}
+                      className="bg-green-900 text-white font-semibold text-sm py-3 px-5 w-max rounded-lg"
+                    >Edit</button>
+                  </div>
+                </div>
+
+              </div>
+            </form>
+
+          </div >
+
+        )}
+      </div>
+    </>
 
 
-    )
+  )
 }
 
 export default DashboardProfileItem
