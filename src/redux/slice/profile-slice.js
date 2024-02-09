@@ -43,7 +43,7 @@ export const getUserByIdAPI = (id) => {
 
 export const getLokasiAPI = async (dispatch) => {
     try {
-        const getRespon = await fetch(`http://localhost:3000/location/cities`)
+        const getRespon = await fetch(`https://nice-cowboy-boots-pike.cyclic.app/cities`)
 
         if (getRespon.ok) {
             const result = await getRespon.json()
@@ -60,21 +60,28 @@ export const putUpdateProfile = (bodyReq, id) => {
         try {
 
             const token = JSON.parse(Cookies.get('responLogin')).token
-            // console.log(token)
+            
+            const formData = new FormData()
+            formData.append('file', bodyReq.file, bodyReq.file.name)
+            formData.append('bio', bodyReq.bio)
+            formData.append('location', bodyReq.location)
+            formData.append('address', bodyReq.address)
+            formData.append('phone', bodyReq.phone)
+
 
             const putRespon = await fetch(`http://localhost:3000/users/${id}`, {
                 method: 'PUT',
                 headers: {
-                    "Content-Type": "application/json",
+                    // "Content-Type": "application/json",
                     'Authorization': token
                 },
-                body: JSON.stringify(bodyReq)
+                body: formData
             })
 
             if (putRespon.ok) {
                 const resultPut = await putRespon.json()
                 // const profil = JSON.parse(resultPut)
-                // console.log(resultPut)
+                console.log(resultPut)
                 dispatch(responMessage(resultPut.message))
             }
 

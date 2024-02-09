@@ -39,7 +39,7 @@ function SignForm() {
   }
 
   useEffect(() => {
-    if (resultResponRegister.user) {
+    if (resultResponRegister.code === 201) {
       alertSucces()
       setTimeout(() => {
         dispatch(getResponInput({}))

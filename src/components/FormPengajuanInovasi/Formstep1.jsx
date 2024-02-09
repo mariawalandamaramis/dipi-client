@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
+import { getKategoriAPI, getLokasiAPI } from '../../redux/slice/ajukaninovasi-slice';
 
 const Formstep1 = ({ register, errors, setValue, getValues, errInputFile }) => {
 
@@ -34,6 +36,38 @@ const Formstep1 = ({ register, errors, setValue, getValues, errInputFile }) => {
   }, [getValues]);
 
 
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(getLokasiAPI)
+    dispatch(getKategoriAPI)
+  }, [])
+
+  const kategori = useSelector(state => state.ajukanInovasi).kategori.data
+  const semuaLokasi = useSelector(state => state.ajukanInovasi).lokasi.data
+
+  const propinsiMap = new Map();
+
+  if (semuaLokasi) {
+    Object.values(semuaLokasi).forEach(data => {
+      if (!propinsiMap.has(data.province)) {
+        propinsiMap.set(data.province, {
+          province: data.province
+        });
+      }
+    });
+  }
+  const propinsi = Array.from(propinsiMap.values());
+
+  const [selectedKota, setSelectedKota] = useState([]);
+
+  const handleProvinceChange = (event) => {
+    const selectedValue = event.target.value;
+    const filteredKota = semuaLokasi?.filter(kota => kota.province === selectedValue);
+    setSelectedKota(filteredKota);
+  };
+
+
   return (
     <>
       <div>
@@ -63,36 +97,55 @@ const Formstep1 = ({ register, errors, setValue, getValues, errInputFile }) => {
       <div>
         <label className='text-lg font-medium' htmlFor="">Lokasi</label>
         <div className='flex flex-col sm:flex-row justify-between gap-2'>
+
           <div className='w-full'>
-            <input {...register('city', {
-              required: ' Lokasi harus diisi ! '
-            })}
-              className='w-full rounded-md border-2 p-2 text-xs font-normal' type="text" placeholder='Kota' />
-            <div className={`text-red-500 text-xs font-semibold leading-5 mt-2 flex flex-row max-md:max-w-full`}>
-              {errors.city && <p>{errors.city.message}</p>}
-            </div>
-          </div>
-          <div className='w-full'>
-            <input {...register('province', {
-              required: ' Lokasi harus diisi ! '
-            })}
-              className='w-full rounded-md border-2 p-2 text-xs font-normal' type="text" placeholder='Propinsi' />
+            <select
+              {...register('province', {
+                required: ' Lokasi propinsi harus diisi ! ',
+                // onChange: (e) => {handleProvinceChange}
+              })}
+              onChange={handleProvinceChange} // agar value bisa didpt, tarus onchange setlh register
+              type="text" className="w-full rounded-md border-2 p-2 text-xs font-normal">
+              <option value="" disabled selected hidden> Pilih propinsi </option>
+
+
+              {propinsi?.length > 0 ? (
+                propinsi.map(propinsi => (
+                  <option key={propinsi.id} value={propinsi.province}>{propinsi.province}</option>
+                ))
+              ) : ( // jika kena limit API
+                <option value="jawa timur">Jawa Timur</option>
+              )}
+
+            </select>
             <div className={`text-red-500 text-xs font-semibold leading-5 mt-2 flex flex-row max-md:max-w-full`}>
               {errors.province && <p>{errors.province.message}</p>}
             </div>
           </div>
-        </div>
-      </div>
-      <div>
-        <label className='text-lg font-medium' htmlFor="">Alamat Lengkap</label>
-        <div>
-          <input {...register('address', {
-            required: ' alamat harus diisi '
-          })}
-            className='w-full rounded-md border-2 p-2 text-xs font-normal' type="text" placeholder='Masukan alamat lengkap' />
-          <div className={`text-red-500 text-xs font-semibold leading-5 mt-2 flex flex-row max-md:max-w-full`}>
-            {errors.address && <p>{errors.address.message}</p>}
+
+          <div className='w-full'>
+            <select {...register('city_id', {
+                required: ' Lokasi kota harus diisi ! ',
+              })}
+              type="text" className="w-full rounded-md border-2 p-2 text-xs font-normal">
+              <option value="" disabled selected hidden> Pilih kota </option>
+
+              {selectedKota?.length > 0 ? (
+                selectedKota.map(kota => (
+                  <option key={kota.id} value={kota.id}>{kota.name}</option>
+                ))
+              ) : ( // jika kena limit API
+                <>
+                  <option value="30">Surabaya</option>
+                  <option value="31">Malang</option>
+                </>
+              )}
+            </select>
+            <div className={`text-red-500 text-xs font-semibold leading-5 mt-2 flex flex-row max-md:max-w-full`}>
+              {errors.city && <p>{errors.city.message}</p>}
+            </div>
           </div>
+
         </div>
       </div>
       <div>
@@ -102,11 +155,19 @@ const Formstep1 = ({ register, errors, setValue, getValues, errInputFile }) => {
             required: ' Pilih salah satu kategori ! '
           })}
             className="rounded-md border-2 p-2 text-xs w-full">
-            <option value="">Pilih katergori Inovasi</option>
-            <option value="kerajinan" >Kerajinan</option>
-            <option value="makanan & minuman" >Makanan & Minuman</option>
-            <option value="acara" >Acara</option>
-            <option value="digital" >Digital</option>
+            <option value="" disabled selected hidden>Pilih katergori Inovasi</option>
+            {kategori?.length > 0 ? (
+              kategori.map(pilih => (
+                <option key={pilih.id} value={pilih.id}>{pilih.category_name}</option>
+              ))
+            ) : ( // jika kena limit API
+              <>
+                <option value="1">Kerajinan</option>
+                <option value="2">Makanan & Minuman</option>
+                <option value="3">Acara</option>
+                <option value="4">Digital</option>
+              </>
+            )}
           </select>
           <div className={`text-red-500 text-xs font-semibold leading-5 mt-2 flex flex-row max-md:max-w-full`}>
             {errors.category && <p>{errors.category.message}</p>}
@@ -116,11 +177,11 @@ const Formstep1 = ({ register, errors, setValue, getValues, errInputFile }) => {
       <div>
         <label className='text-lg font-medium' htmlFor="">Foto Pendukung</label>
         <div>
-          <input 
-          required={true}
-          // {...register('image', {
-          //   required: 'Gambar pendukung harus diisi!',
-          // })}
+          <input
+            required={true}
+            // {...register('image', {
+            //   required: 'Gambar pendukung harus diisi!',
+            // })}
             onChange={handleImageChange}
             className='w-full rounded-md border-2 text-xs font-normal file:border-none file:p-2 file:bg-gray-200' type="file" multiple />
           <div className={`text-red-500 text-xs font-semibold leading-5 mt-2 flex flex-row max-md:max-w-full`}>
@@ -133,11 +194,11 @@ const Formstep1 = ({ register, errors, setValue, getValues, errInputFile }) => {
       <div>
         <label className='text-lg font-medium' htmlFor="">Video Pendukung (Opsional) </label>
         <div>
-          <input 
-          required={true}
-          // {...register('video', {
-          //   required: 'Video pendukung harus diisi!',
-          // })}
+          <input
+            required={true}
+            // {...register('video', {
+            //   required: 'Video pendukung harus diisi!',
+            // })}
             onChange={handleVideoChange}
             className='w-full rounded-md border-2 text-xs font-normal file:border-none file:p-2 file:bg-gray-200' type="file" multiple />
           <div className={`text-red-500 text-xs font-semibold leading-5 mt-2 flex flex-row max-md:max-w-full`}>

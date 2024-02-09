@@ -5,6 +5,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import { getInovasiByIdAPI, getLokasiAPI, getOpsiDukunganAPI, getUsersAPI } from '../redux/slice/inovasi-slice'
 import { useParams } from 'react-router-dom'
 import Cardopsidonasi from '../components/Cardopsidonasi'
+import withReactContent from 'sweetalert2-react-content'
+import Swal from 'sweetalert2'
+import { postDukunganAPI } from '../redux/slice/dukungan-slice'
 
 const OpsiDukungan = () => {
   const { id } = useParams()
@@ -17,6 +20,8 @@ const OpsiDukungan = () => {
   const [btnClick, setBtnClick] = useState(false)
   const [msgInput, setMsgInput] = useState(false)
   const [tryReqDonation, setTryReqDonation] = useState({})
+  const infoDukungan = useSelector((state) => state.dukungan)
+  
 
   useEffect(() => {
     dispatch(getInovasiByIdAPI(id))
@@ -27,7 +32,9 @@ const OpsiDukungan = () => {
     if (btnClick) {
       if (tryReqDonation.nominal === 0 || tryReqDonation.nominal === "") { setMsgInput(true) }
       else {
-        alert(JSON.stringify(tryReqDonation))
+        // post API here
+        // alertSucces()
+        dispatch(postDukunganAPI(tryReqDonation))
         setMsgInput(false)
       }
       setBtnClick(false)
@@ -35,12 +42,35 @@ const OpsiDukungan = () => {
 
   }, [btnClick])
 
-  const handleClikDukung = ({ type, nominal, suvenir }) => {
+
+  useEffect(() => {
+    if (infoDukungan?.infoDukungan.code === 201) {
+      alertSucces()
+      setTimeout(() => {
+        window.location.reload()
+      }, [12000])
+    }
+  }, [infoDukungan])
+
+
+  const alertSucces = () => {
+    withReactContent(Swal).fire({
+      position: "center",
+      icon: "success",
+      title: "Terima kasih, dana dukungan berhasil diterima.",
+      html: `<p>Dana dukunganmu akan dipotong <u><em>Rp ${infoDukungan.infoDukungan.data?.fee}</em></u> untuk pengembangan dan sisanya yaitu <u><strong>Rp ${infoDukungan.infoDukungan.data?.nominal}</strong></u> akan langsung di transfer ke Inovator</p>`,
+      showConfirmButton: true,
+      timer: 10000
+    })
+  }
+
+
+
+  const handleClikDukung = ({ nominal, package_id }) => {
     setTryReqDonation({
-      inovation_id: id,
-      type: type,
+      inovation_id: parseInt(id),
       nominal: nominal,
-      suvenir: suvenir
+      package_id: package_id,
     })
     setBtnClick(true)
     // alert(JSON.stringify(tryReqDonation))
@@ -84,7 +114,7 @@ const OpsiDukungan = () => {
     return tanggalSelesai.toLocaleDateString('id-ID', options);
   }
 
-  console.log(OpsiDukungan[0].nominal)
+  //console.log(OpsiDukungan[0].nominal)
 
 
   return (
@@ -93,12 +123,12 @@ const OpsiDukungan = () => {
 
       <div className='flex flex-col gap-4 bg-green-900 text-white p-6 md:px-20 lg:px-40 lg:py-16'>
         <p className='text-base font-semibold'>Kamu memilih untuk menjadi pendukung inovasi :</p>
-        <h3 className='text-4xl font-extrabold'>{inovasiById.inovation_name.replace(/\b\w/g, match => match.toUpperCase())}</h3>
+        <h3 className='text-4xl font-extrabold'>{inovasiById?.inovation_name.replace(/\b\w/g, match => match.toUpperCase())}</h3>
         <div className='flex items-center gap-2'>
           <div className='w-10 md:w-10 h-10 md:h-10'>
-            <img className='w-full h-full rounded-full object-cover' src={fotoUser[inovasiById.user_id]} alt="" srcset="" />
+            <img className='w-full h-full rounded-full object-cover' src={fotoUser[inovasiById?.user_id]} alt="" srcset="" />
           </div>
-          <p className='flex text-base font-semibold'>{namaUser[inovasiById.user_id]}</p>
+          <p className='flex text-base font-semibold'>{namaUser[inovasiById?.user_id]}</p>
         </div>
       </div>
 
@@ -139,9 +169,8 @@ const OpsiDukungan = () => {
             <p className='flex md:hidden text-sm font-normal'>Masukan nominal dana pendukung yang ingin diberikan, tidak ada batas maksimal dan minimal</p>
             <button onClick={() => handleClikDukung(
               {
-                type: 0,
                 nominal: nominalDukungan, // isi dari input
-                suvenir: '',
+                package_id: 0,
               }
             )}
               className='mt-5 md:mt-0 bg-green-900 rounded py-2 md:py-0 px-3 text-white text-sm font-semibold'>
@@ -161,20 +190,19 @@ const OpsiDukungan = () => {
         </div>
 
         <div className='grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5'>
-          {OpsiDukungan.map((data, idx) => (
+          {OpsiDukungan?.map((data, idx) => (
             <Cardopsidonasi
               key={data.id}
               sovenir={idx + 1}
               nominal={data.nominal.toLocaleString('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 })}
-              description={data.description}
-              inovation_name={inovasiById.inovation_name}
-              kota={namaKota[inovasiById.city_id]}
-              propinsi={namaPropinsi[inovasiById.province_id]}
-              estimasipengiriman={tglSemingguStlhSelesai(inovasiById.duration, inovasiById.createdAt)}
+              description={data.souvenir}
+              inovation_name={inovasiById?.inovation_name}
+              kota={namaKota[inovasiById?.city_id]}
+              propinsi={namaPropinsi[inovasiById?.province_id]}
+              estimasipengiriman={tglSemingguStlhSelesai(inovasiById?.duration, inovasiById?.createdAt)}
               onClick={() => handleClikDukung({
-                type: 1,
                 nominal: data.nominal,
-                suvenir: data.description
+                package_id: data.id
               })}
             />
           ))}

@@ -33,10 +33,15 @@ export const postInputToAPI = (data) => async (dispatch) => {
 
         if (postRespon.ok) {
             const responAPI = await postRespon.json();
-            const convertResponAPI = JSON.stringify(responAPI)
-            const convertParseResponAPI = JSON.parse(convertResponAPI)
+            const toCookies = {
+                token: responAPI.token,
+                user: {
+                    id: responAPI.user.id
+                }
+            }
+            const convertResponAPI = JSON.stringify(toCookies)
             Cookies.set('responLogin', convertResponAPI)
-            dispatch(getResponInput(convertParseResponAPI))
+            dispatch(getResponInput(responAPI))
 
         } else {
             const responAPIerr = await postRespon.json();

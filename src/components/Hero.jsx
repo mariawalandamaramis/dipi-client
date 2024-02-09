@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 function Hero({ title, desc, imgSrc, btnText, btnShow }) {
   return (
@@ -8,10 +9,12 @@ function Hero({ title, desc, imgSrc, btnText, btnShow }) {
           <h1 className='text-3xl font-extrabold mb-6 text-white'>{title}</h1>
           <p className='text-base font-normal mb-8 text-white'>{desc}</p>
           {btnShow && (
+            <Link to={'/inovasi'}>
             <button className='bg-orange-600 h-10 rounded-lg py-4 px-3.5 text-white text-sm font-black flex items-center justify-center gap-3'>
               <p>{btnText}</p>
               <img src="Arrow-right.svg" alt="" />
             </button>
+            </Link>
           )}
         </div>
         <div className='flex items-center justify-center self-stretch md:w-3/4'>

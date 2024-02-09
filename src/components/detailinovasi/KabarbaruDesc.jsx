@@ -12,10 +12,10 @@ const KabarbaruDesc = ({ artikelKe, foto, name, created, title, description }) =
       <h4 className="text-3xl font-bold">{title}</h4>
       <div className='flex items-center gap-2'>
         <div className='w-10 md:w-10 h-10 md:h-10'>
-          <img className='w-full h-full rounded-full object-cover' src={foto} alt="" srcset="" />
+          <img className='w-full h-full rounded-full object-cover' src={foto || "/BlankData.jpg"} alt="" srcset="" />
         </div>
         <div>
-          <p className='text-base font-semibold'>{name}</p>
+          <p className='text-base font-semibold'>{name || 'nama user'}</p>
           <p className="text-xs font-extralight">{created}</p>
         </div>
       </div>

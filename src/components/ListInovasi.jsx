@@ -166,7 +166,7 @@ function ListInovasi() {
               id={data.id}
               user_name={namaUser[data.user_id]}
               time={sisaHari(data.duration, data.createdAt)}
-              persenTarget={persenTarget(data.amount, 100)}
+              persenTarget={persenTarget(data.amount, data.total_support)}
               kota={namaKota[data.city_id]}
               propinsi={namaPropinsi[data.province_id]}
             />

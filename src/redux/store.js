@@ -4,6 +4,8 @@ import loginSlice from "./slice/login-slice";
 import registerSlice from "./slice/register-slice";
 import ajukaninovasiSlice from "./slice/ajukaninovasi-slice";
 import profileSlice from "./slice/profile-slice";
+import dukunganSlice from "./slice/dukungan-slice";
+import artikelSlice from "./slice/artikel-slice";
 
 
 
@@ -13,7 +15,9 @@ const store = configureStore({
         login: loginSlice,
         register: registerSlice,
         ajukanInovasi: ajukaninovasiSlice,
-        profile: profileSlice
+        profile: profileSlice,
+        dukungan: dukunganSlice,
+        artikel: artikelSlice,
     }
 })
 

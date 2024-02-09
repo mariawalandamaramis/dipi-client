@@ -48,9 +48,8 @@ const App = () => {
           {/* <Route path='/dashboard' element={<NotLogin><LayoutDashboard /></NotLogin>} > */}
           <Route path='/dashboard' element={<LayoutDashboard />} >
             <Route index element={<Dashboard />} />
-            <Route path='inovasiku' element={<DashoardInovasiku />} >
-              <Route path=':id' element={<DashoardInovasiku_update />} />
-            </Route>
+            <Route path='inovasiku' element={<DashoardInovasiku />} />
+            <Route path='inovasiku/:id' element={<DashoardInovasiku_update />} />
             <Route path='donasiku' element={<DashboardDonasiku />} />
             <Route path='profile' element={<DashboardProfile />} />
           </Route>

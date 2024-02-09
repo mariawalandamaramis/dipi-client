@@ -1,6 +1,8 @@
 import Cookies from 'js-cookie';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from "react-router-dom";
+import { getUserByIdAPI } from '../redux/slice/profile-slice';
 
 function Navbar() {
 
@@ -10,8 +12,17 @@ function Navbar() {
     setOpenMenu(!openMenu)
   }
 
-  // const isToken = JSON.parse(Cookies.get('responLogin')).token
-  // console.log(isToken)
+  const responLoginCookie = Cookies.get('responLogin');
+  const userId = responLoginCookie ? JSON.parse(responLoginCookie)?.user?.id : null;
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    if (userId) {
+      dispatch(getUserByIdAPI(userId));
+    }
+  }, [userId]);
+
+  const user = useSelector(state => state.profile).userById.data
 
   return (
     <>
@@ -34,7 +45,7 @@ function Navbar() {
               Cookies.get('responLogin') ? (
                 <Link to={'/dashboard'}>
                   <div className='w-10 md:w-10 h-10 md:h-10'>
-                    <img className='w-full h-full rounded-full object-cover' src="/Hero.png" alt="" srcset="" />
+                    <img className='w-full h-full rounded-full object-cover' src={user?.profile || "BlankData.jpg"} alt="" srcset="" />
                   </div>
                 </Link>
               ) : (

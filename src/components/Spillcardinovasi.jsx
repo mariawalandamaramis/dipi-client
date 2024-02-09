@@ -75,6 +75,8 @@ const Spillcardinovasi = () => {
     dispatch(getLokasiAPI)
   }, [])
 
+  console.log(beberapaInovasi)
+
   return (
     <>
       <div className='bg-white p-6 md:px-20 lg:px-40 lg:py-20 flex flex-col gap-14 items-center'>
@@ -93,7 +95,7 @@ const Spillcardinovasi = () => {
               id={data.id}
               user_name={namaUser[data.user_id]}
               time={sisaHari(data.duration, data.createdAt)}
-              persenTarget={persenTarget(data.amount, 1000)}
+              persenTarget={persenTarget(data.amount, data.total_support)}
               kota={namaKota[data.city_id]}
               propinsi={namaPropinsi[data.province_id]}
             />

@@ -1,9 +1,81 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
+import { getYangDidukungAPI } from '../redux/slice/dukungan-slice';
+import { useDispatch, useSelector } from 'react-redux';
+import Cookies from 'js-cookie';
+import { getDanaDukunganByInov } from '../redux/slice/inovasi-slice';
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const Dashboard = () => {
+  const dispatch = useDispatch()
+  const dukungan = useSelector((state) => state.dukungan);
+  const yangDidukung = dukungan?.yangDidukung.data ? Object.values(dukungan.yangDidukung.data.supports) : [];
+  const userId = JSON.parse(Cookies.get('responLogin')).user.id
+  const danaInovasi = useSelector((state) => state.inovasi).danaInovasi.data
+
+
+  // mendapatkan data yang cuma di dukung user ini / inovasinya dia aja, LOL.
+  const yangDidukungUserINI = yangDidukung.filter(item => item.giver_id === userId);
+  const danaInovasiUserINI = danaInovasi?.filter(item => item.user_id === userId)
+
+
+  // kamu udh donasi berapa ?
+  // get giver by Id user -- ambil di cookies -- filter
+  // jumlah nominal, lalu kurangi 1000x berapa banyak x-donasi
+
+  // cari nominal yang didukung / pengeluaran tiap bulan dengan skema sudah dikurangi fee
+  // inisialisasi objek dengan semua bulan (1-12) dengan nilai awal 0
+  const nominalPengeluaranPerBulan = {};
+  for (let i = 1; i <= 12; i++) {
+    nominalPengeluaranPerBulan[i] = 0;
+  }
+
+  // hitung jumlah nominal pengeluaran per bulan
+  yangDidukungUserINI?.forEach(curr => {
+    const bulan = new Date(curr.createdAt).getMonth() + 1;
+    // const nominalKurangiFee = curr.nominal - curr.fee;
+
+    // akumulasi nominal ke bulan yang sesuai
+    nominalPengeluaranPerBulan[bulan] += curr.nominal;
+  });
+
+  const dataPengeluaranPerbulan = Object.values(nominalPengeluaranPerBulan)
+  const totalPengeluaran = Object.values(nominalPengeluaranPerBulan)
+    .reduce((acc, curr) => acc + curr, 0)
+    .toLocaleString('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 });
+
+
+
+  // inovasimu tiap bulan udh dpt berapa ?
+  // inisalisasi bulan
+  const nominalPendapatanPerBulan = {};
+  for (let i = 1; i <= 12; i++) {
+    nominalPendapatanPerBulan[i] = 0;
+  }
+
+  // hitung jumlah nominal pendapatan per bulan
+  danaInovasiUserINI?.forEach(masuk => {
+    masuk.supports.forEach(supp => {
+      const bulan = new Date(supp.createdAt).getMonth() + 1
+      const nominalKurangiFee = supp.nominal - supp.fee;
+      nominalPendapatanPerBulan[bulan] += nominalKurangiFee
+    })
+  })
+
+  const dataPendapatanPerBulan = Object.values(nominalPendapatanPerBulan)
+  // console.log(dataPendapatanPerBulan)
+
+  const totalDanaInovasi = Object.values(nominalPendapatanPerBulan)
+    .reduce((acc, curr) => acc + curr, 0)
+    .toLocaleString('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 });
+
+
+  useEffect(() => {
+    dispatch(getYangDidukungAPI())
+    dispatch(getDanaDukunganByInov())
+  }, [])
+
 
   const options = {
     responsive: true,
@@ -26,12 +98,12 @@ const Dashboard = () => {
     datasets: [
       {
         label: 'Pemasukan',
-        data: [10, 20, 90, 50, 10, 20, 90,],
+        data: dataPendapatanPerBulan,
         backgroundColor: '#60a5fa',
       },
       {
         label: 'Pengeluaran',
-        data: [20, 40, 10, 40, 20, 90, 100],
+        data: dataPengeluaranPerbulan,
         backgroundColor: '#4ade80',
       },
     ],
@@ -58,7 +130,7 @@ const Dashboard = () => {
                 <div className='w-6 h-6 rounded-full bg-blue-400'></div>
                 <div>
                   <p className='text-sm font-semibold'>Pemasukan Dana Inovasi</p>
-                  <p className='text-3xl font-semibold'>102K</p>
+                  <p className='text-3xl font-semibold'>{totalDanaInovasi}</p>
                 </div>
               </div>
 
@@ -66,7 +138,7 @@ const Dashboard = () => {
                 <div className='w-6 h-6 rounded-full bg-green-400'></div>
                 <div>
                   <p className='text-sm font-semibold'>Pengeluaran Dana Dukungan</p>
-                  <p className='text-3xl font-semibold'>102K</p>
+                  <p className='text-3xl font-semibold'>{totalPengeluaran}</p>
                 </div>
               </div>
             </div>

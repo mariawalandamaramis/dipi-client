@@ -7,11 +7,19 @@ import Cookies from 'js-cookie'
 import withReactContent from 'sweetalert2-react-content'
 import Swal from 'sweetalert2'
 import { useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { getUserByIdAPI } from '../redux/slice/profile-slice'
 
 const Ajukaninovasi = () => {
+  const responLoginCookie = Cookies.get('responLogin');
+  const userId = responLoginCookie ? JSON.parse(responLoginCookie)?.user?.id : null; 
+  const dispatch = useDispatch()
   const navigate = useNavigate()
   const [checkUser, setCheckUser] = useState(false)
   const [message, setMessage] = useState('')
+  const user = useSelector(state => state.profile).userById.data
+  // console.log(user)
+  // console.log(user.bio === null && user.location === null && user.profile === null)
 
   const handleButtonClick = () => {
     // jika blm login === undefined
@@ -27,10 +35,8 @@ const Ajukaninovasi = () => {
       return;
     }
 
-    const { user } = JSON.parse(getCookies)
-
     if (user.bio === null && user.location === null && user.profile === null) {
-      setCheckUser(true) // nanti diganti false yaaa
+      setCheckUser(false) // nanti diganti false yaaa
       setMessage("Lengkapi profile dulu !")
     } else {
       setCheckUser(true)
@@ -42,6 +48,16 @@ const Ajukaninovasi = () => {
     withReactContent(Swal).fire({
       position: "center",
       icon: "warning",
+      title: message,
+      showConfirmButton: false,
+      timer: 1500
+    })
+  }
+
+  const alertMessageSucces = () => {
+    withReactContent(Swal).fire({
+      position: "center",
+      icon: "success",
       title: message,
       showConfirmButton: false,
       timer: 1500
@@ -63,18 +79,22 @@ const Ajukaninovasi = () => {
         alertMessageError()
         setTimeout(() => {
           setMessage("")
-          navigate('/dashboard')
+          navigate('/dashboard/profile')
         }, 1500)
     }
 
     // jika profile lengkap ...
-    // if (checkUser) {
-    //   alertMessageError()
-    //   setTimeout(() => {
-    //     navigate('/ajukaninovasi/form')
-    //   }, 1500)
-    // }
+    if (checkUser) {
+      alertMessageSucces()
+      setTimeout(() => {
+        navigate('/ajukaninovasi/form')
+      }, 1500)
+    }
   }, [checkUser, message, navigate])
+
+  useEffect(() => {
+    dispatch(getUserByIdAPI(userId))
+  }, [])
 
 
 

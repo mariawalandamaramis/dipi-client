@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import Cookies from 'js-cookie';
 
 const inovasiSlice = createSlice({
     name: 'inovasi',
@@ -9,7 +10,8 @@ const inovasiSlice = createSlice({
         artikel: [],
         paketDukungan: [],
         lokasi: [],
-        users: {}
+        users: {},
+        danaInovasi: [],
     },
 
     reducers: {
@@ -33,12 +35,15 @@ const inovasiSlice = createSlice({
         },
         getUsers(state, action) {
             state.users = action.payload
+        },
+        getDanaDukungan(state, action) {
+            state.danaInovasi = action.payload
         }
     }
 })
 
 export const { getSemuaInovasi, getKategori, getInovasiById,
-    getOpsiDukungan, getArtikel, getUsers, getLokasi } = inovasiSlice.actions
+    getOpsiDukungan, getArtikel, getUsers, getLokasi, getDanaDukungan } = inovasiSlice.actions
 export default inovasiSlice.reducer
 
 export const getSemuaInovasiAPI = async (dispatch) => {
@@ -125,5 +130,29 @@ export const getLokasiAPI = async (dispatch) => {
 
     } catch (error) {
         console.log('error ga bisa ambil API : get Lokasi')
+    }
+}
+
+export const getDanaDukunganByInov = () => async (dispatch) => {
+    try {
+        const token = JSON.parse(Cookies.get('responLogin')).token
+
+        var myHeaders = new Headers();
+        myHeaders.append("Authorization", token)
+
+        const getRespon = await fetch('http://localhost:3000/support/getbyinovation', {
+            method: 'GET',
+            headers: myHeaders
+        })
+
+        if (getRespon.ok) {
+            const resultGet = await getRespon.json()
+            // console.log(resultGet)
+            // const parserResult = JSON.parse(resultGet)
+            dispatch(getDanaDukungan(resultGet))
+        }
+
+    } catch (error) {
+        console.log(error)
     }
 }
