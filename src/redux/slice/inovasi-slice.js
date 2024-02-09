@@ -48,7 +48,7 @@ export default inovasiSlice.reducer
 
 export const getSemuaInovasiAPI = async (dispatch) => {
     try {
-        const getRespon = await fetch('http://localhost:3000/inovation')
+        const getRespon = await fetch('https://nice-cowboy-boots-pike.cyclic.app/inovation')
         const result = await getRespon.json()
         dispatch(getSemuaInovasi(result.data))
 
@@ -59,7 +59,7 @@ export const getSemuaInovasiAPI = async (dispatch) => {
 
 export const getKategoriAPI = async (dispatch) => {
     try {
-        const getRespon = await fetch('http://localhost:3000/category')
+        const getRespon = await fetch('https://nice-cowboy-boots-pike.cyclic.app/category')
         const result = await getRespon.json()
         dispatch(getKategori(result))
 
@@ -71,7 +71,7 @@ export const getKategoriAPI = async (dispatch) => {
 export const getInovasiByIdAPI = (id) => {
     return async (dispatch) => {
         try {
-            const getRespon = await fetch(`http://localhost:3000/inovation/${id}`)
+            const getRespon = await fetch(`https://nice-cowboy-boots-pike.cyclic.app/inovation/${id}`)
             const result = await getRespon.json()
             dispatch(getInovasiById(result))
 
@@ -84,7 +84,7 @@ export const getInovasiByIdAPI = (id) => {
 export const getArtikelAPI = (id) => {
     return async (dispatch) => {
         try {
-            const getRespon = await fetch(`http://localhost:3000/article?inovation_id=${id}`)
+            const getRespon = await fetch(`https://nice-cowboy-boots-pike.cyclic.app/article?inovation_id=${id}`)
             const result = await getRespon.json()
             dispatch(getArtikel(result))
 
@@ -97,7 +97,7 @@ export const getArtikelAPI = (id) => {
 export const getOpsiDukunganAPI = (id) => {
     return async (dispatch) => {
         try {
-            const getRespon = await fetch(`http://localhost:3000/package?inovation_id=${id}`)
+            const getRespon = await fetch(`https://nice-cowboy-boots-pike.cyclic.app/package?inovation_id=${id}`)
             const result = await getRespon.json()
             dispatch(getOpsiDukungan(result))
 
@@ -109,7 +109,7 @@ export const getOpsiDukunganAPI = (id) => {
 
 export const getUsersAPI = async (dispatch) => {
     try {
-        const getRespon = await fetch(`http://localhost:3000/users`)
+        const getRespon = await fetch(`https://nice-cowboy-boots-pike.cyclic.app/users`)
         const result = await getRespon.json()
         dispatch(getUsers(result))
 
@@ -121,7 +121,7 @@ export const getUsersAPI = async (dispatch) => {
 
 export const getLokasiAPI = async (dispatch) => {
     try {
-        const getRespon = await fetch(`http://localhost:3000/location/cities`)
+        const getRespon = await fetch(`https://nice-cowboy-boots-pike.cyclic.app/cities`)
 
         if (getRespon.ok) {
             const result = await getRespon.json()
@@ -140,7 +140,7 @@ export const getDanaDukunganByInov = () => async (dispatch) => {
         var myHeaders = new Headers();
         myHeaders.append("Authorization", token)
 
-        const getRespon = await fetch('http://localhost:3000/support/getbyinovation', {
+        const getRespon = await fetch('https://nice-cowboy-boots-pike.cyclic.app/support/getbyinovation', {
             method: 'GET',
             headers: myHeaders
         })

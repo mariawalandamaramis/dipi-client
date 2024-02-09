@@ -31,7 +31,7 @@ export default profilSlice.reducer
 export const getUserByIdAPI = (id) => {
     return async (dispatch) => {
         try {
-            const getRespon = await fetch(`http://localhost:3000/users/${id}`)
+            const getRespon = await fetch(`https://nice-cowboy-boots-pike.cyclic.app/users/${id}`)
             const result = await getRespon.json()
             dispatch(getUserById(result))
 
@@ -69,7 +69,7 @@ export const putUpdateProfile = (bodyReq, id) => {
             formData.append('phone', bodyReq.phone)
 
 
-            const putRespon = await fetch(`http://localhost:3000/users/${id}`, {
+            const putRespon = await fetch(`https://nice-cowboy-boots-pike.cyclic.app/users/${id}`, {
                 method: 'PUT',
                 headers: {
                     // "Content-Type": "application/json",
@@ -96,7 +96,7 @@ export const postImageAPI = (imgFile) => {
         try {
             const formData = new FormData();
             formData.append("file", imgFile, imgFile.name)
-            const postRespon = await fetch('http://localhost:3000/inovation/uploadImage', {
+            const postRespon = await fetch('https://nice-cowboy-boots-pike.cyclic.app/inovation/uploadImage', {
                 method: 'POST',
                 body: formData
             })

@@ -23,7 +23,7 @@ const loginSlice = createSlice({
 
 export const postInputToAPI = (data) => async (dispatch) => {
     try {
-        const postRespon = await fetch('http://localhost:3000/users/login', {
+        const postRespon = await fetch('https://nice-cowboy-boots-pike.cyclic.app/users/login', {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",

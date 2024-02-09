@@ -43,7 +43,7 @@ export const postImageAPI = (imgFile) => {
     try {
       const formData = new FormData();
       formData.append("file", imgFile[0], imgFile[0].name)
-      const postRespon = await fetch('http://localhost:3000/inovation/uploadImage', {
+      const postRespon = await fetch('https://nice-cowboy-boots-pike.cyclic.app/inovation/uploadImage', {
         method: 'POST',
         body: formData
       })
@@ -68,7 +68,7 @@ export const postVideoAPI = (videoFile) => {
     try {
       const formData = new FormData();
       formData.append("video", videoFile[0], videoFile[0].name)
-      const postRespon = await fetch('http://localhost:3000/inovation/uploadvideo', {
+      const postRespon = await fetch('https://nice-cowboy-boots-pike.cyclic.app/inovation/uploadvideo', {
         method: 'POST',
         body: formData
       })
@@ -126,7 +126,7 @@ export const postAjukanInovasiCompleted = (dataWithoutImgVid) => {
 
       const currentState = getState()
       const allStateHere = currentState.ajukanInovasi // akses satet disini
-      const APIURL_INOVASI = 'http://localhost:3000/inovation'
+      const APIURL_INOVASI = 'https://nice-cowboy-boots-pike.cyclic.app/inovation'
       const token = JSON.parse(Cookies.get('responLogin')).token
 
       const readyInovasiToPost = {
