@@ -180,19 +180,31 @@ const DashboardProfileItem = () => {
                           <option value="" disabled selected hidden>
                             {userById.location ? (namaPropinsi[userById.location]) : ('Pilih propinsi')}
                           </option>
-                          {propinsi?.map(propinsi => (
-                            <option key={propinsi.id} value={propinsi.province} >{propinsi.province}</option>
-                          ))}
+                          {propinsi?.length > 0 ? (
+                            propinsi.map(propinsi => (
+                              <option key={propinsi.id} value={propinsi.province}>{propinsi.province}</option>
+                            ))
+                          ) : ( // jika kena limit API
+                            <option value="jawa timur">Jawa Timur</option>
+                          )}
                         </select>
 
                         <select onChange={handleCityChange} type="text" className="w-full rounded-md border-2 p-2 text-xs font-normal">
                           <option value="" disabled selected hidden>
                             {userById.location ? (namaKota[userById.location]) : ('Pilih kota')}
                           </option>
-                          {selectedKota?.map(kota => (
-                            <option key={kota.id} value={kota.id} >{kota.name}</option>
-                          ))}
+                          {selectedKota?.length > 0 ? (
+                            selectedKota.map(kota => (
+                              <option key={kota.id} value={kota.id}>{kota.name}</option>
+                            ))
+                          ) : ( // jika kena limit API
+                            <>
+                              <option value="30">Surabaya</option>
+                              <option value="31">Malang</option>
+                            </>
+                          )}
                         </select>
+
                       </div>
                     </div>
                     <div>

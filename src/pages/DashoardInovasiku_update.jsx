@@ -188,7 +188,7 @@ const DashoardInovasiku_update = () => {
                   artikelKe={artikelByIdInovasi.data.length - idx}
                   name={namaUser[inovasiById.user_id]}
                   foto={fotoUser[inovasiById.user_id]}
-                  title={'Judul kabar informasi terbaru'}
+                  title={data.title}
                   description={data.description}
                   created={new Date(data.createdAt).toLocaleDateString('id-ID', optionFormatDate)}
                 />

@@ -25,7 +25,7 @@ function Detail() {
   }, [])
 
 
-  const persenTarget = Math.round((inovasiById.total_support / inovasiById?.amount) * 100)
+  const persenTarget = Math.round((inovasiById?.total_support / inovasiById?.amount) * 100)
 
   // sisa hari 
   // durasi - (jml hari yang sudah dilalui)
@@ -93,7 +93,7 @@ function Detail() {
           </div>
           <div className="flex flex-col gap-3">
             <div className="flex items-center justify-between">
-              <p className="text-2xl font-semibold">{inovasiById.total_support.toLocaleString('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 })}</p>
+              <p className="text-2xl font-semibold">{inovasiById?.total_support?.toLocaleString('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }) || 'Rp 0'}</p>
               <p className="text-base font-normal">100 Pendukung</p>
             </div>
 
@@ -109,7 +109,7 @@ function Detail() {
           </div>
           <div className='flex gap-2'>
             <img src="/PinMap_green.svg" alt="" srcset="" />
-            <p className='text-base font-normal'>{namaKota[inovasiById?.city_id]}, {namaPropinsi[inovasiById?.province_id]}</p>
+            <p className='text-base font-normal'>{namaKota[inovasiById?.city_id] || 'Indonesia'}, {namaPropinsi[inovasiById?.province_id]}</p>
           </div>
           <Link to={`dukungan`}>
             <button className="bg-green-900 w-full rounded py-2 px-3.5 text-white text-md font-semibold flex items-center justify-center gap-3">
@@ -164,7 +164,7 @@ function Detail() {
                 artikelKe={artikelByIdInovasi.data.length - idx}
                 name={namaUser[inovasiById.user_id]}
                 foto={fotoUser[inovasiById.user_id]}
-                title={'Judul kabar informasi terbaru'}
+                title={data.title}
                 description={data.description}
                 created={new Date(data.createdAt).toLocaleDateString('id-ID', optionFormatDate)}
               />
