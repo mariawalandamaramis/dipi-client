@@ -1,68 +1,50 @@
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+/* remove arrow on input type number */
+@layer base {
+    input[type='number']::-webkit-outer-spin-button,
+    input[type='number']::-webkit-inner-spin-button,
+    input[type='number'] {
+      -webkit-appearance: none;
+      margin: 0;
+      -moz-appearance: textfield !important;
+    }
+ }
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
+/* return the default size for result text editor */
 
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
+/* 
+.text-editor h1 { font-size: 2em } */
+.text-editor h2 { font-size: 1.5em; font-weight: 800; }
+/* 
+.text-editor h3 { font-size: 1.125em }
+.text-editor h4 { font-size: 1em }
+.text-editor h5 { font-size: .83em }
+.text-editor h6 { font-size: .67rem } */
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
+.text-editor .ql-indent-1 { text-indent: 1em;}
+.text-editor .ql-indent-2 { text-indent: 2em;}
+.text-editor .ql-indent-3 { text-indent: 3em;}
+.text-editor .ql-indent-4 { text-indent: 4em;}
+.text-editor .ql-indent-5 { text-indent: 5em;}
+.text-editor .ql-indent-6 { text-indent: 6em;}
+.text-editor .ql-indent-7 { text-indent: 7em;}
+.text-editor .ql-indent-8 { text-indent: 8em;}
+.text-editor .ql-indent-9 { text-indent: 9em;}
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
+.text-editor ul { list-style-type: disc; list-style-position: inside; }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+.text-editor .ql-align-left { text-align: left; }
+.text-editor .ql-align-right { text-align: right; }
+.text-editor .ql-align-center { text-align: center; }
+.text-editor .ql-align-justify { text-align: justify; }
+
+.text-editor blockquote {
+    border-left: 4px solid #ccc;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    padding-left: 8px;
 }

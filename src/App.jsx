@@ -1,33 +1,60 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from 'react'
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom'
+import Landingpage from './pages/Landingpage'
+import Ajukaninovasi from './pages/Ajukaninovasi'
+import LayoutDashboard from './components/layoutdashboard/LayoutDashboard'
+import Dashboard from './pages/Dashboard'
+import DashoardInovasiku from './pages/DashoardInovasiku'
+import DashboardDonasiku from './pages/DashboardDonasiku'
+import DashboardProfile from './pages/DashboardProfile'
+import DashoardInovasiku_update from './pages/DashoardInovasiku_update'
+import LoginRegisterForm from './pages/LoginRegisterForm'
+import SignUpForm from './pages/SignUpForm'
+import DetailPageInovasi from './pages/DetailPageInovasi'
+import ListPageInovasi from './pages/ListPageInovasi'
+import Cookies from 'js-cookie'
+import Ajukaninovasi_form from './pages/Ajukaninovasi_form'
+import OpsiDukungan from './pages/OpsiDukungan'
 
-function App() {
-  const [count, setCount] = useState(0)
+
+
+const App = () => {
+
+  // jika sudah Login, maka tidak bisa akses router ...
+  const AlreadyLogin = (props) => {
+    if (Cookies.get('responLogin') === undefined) { return props.children }
+    else if (Cookies.get('responLogin') !== undefined) { return <Navigate to={'/'} /> }
+  }
+
+  // jika belum login, maka tidak bisa akses router ...
+  const NotLogin = (props) => {
+    if (Cookies.get('responLogin') === undefined) { return <Navigate to={'/'} /> }
+    else if (Cookies.get('responLogin') !== undefined) { return props.children }
+  }
+
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <Router>
+        <Routes>
+          <Route path='/' element={<Landingpage />} />
+          <Route path='/login' element={<AlreadyLogin><LoginRegisterForm /></AlreadyLogin>} />
+          <Route path='/signup' element={<AlreadyLogin><SignUpForm /></AlreadyLogin>} />
+          <Route path='/inovasi' element={<ListPageInovasi />} />
+          <Route path='/inovasi/:id' element={<DetailPageInovasi />} />
+          <Route path='/inovasi/:id/dukungan' element={<OpsiDukungan />} />
+          <Route path='/ajukaninovasi' element={<Ajukaninovasi />} />
+          <Route path='/ajukaninovasi/form' element={<Ajukaninovasi_form/>} />
+          {/* <Route path='/dashboard' element={<NotLogin><LayoutDashboard /></NotLogin>} > */}
+          <Route path='/dashboard' element={<LayoutDashboard />} >
+            <Route index element={<Dashboard />} />
+            <Route path='inovasiku' element={<DashoardInovasiku />} />
+            <Route path='inovasiku/:id' element={<DashoardInovasiku_update />} />
+            <Route path='donasiku' element={<DashboardDonasiku />} />
+            <Route path='profile' element={<DashboardProfile />} />
+          </Route>
+        </Routes>
+      </Router>
     </>
   )
 }
