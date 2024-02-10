@@ -34,10 +34,10 @@ const Dashboard = () => {
   // hitung jumlah nominal pengeluaran per bulan
   yangDidukungUserINI?.forEach(curr => {
     const bulan = new Date(curr.createdAt).getMonth() + 1;
-    // const nominalKurangiFee = curr.nominal - curr.fee;
+    const nominalTanpaiFee = curr.nominal + curr.fee; // di tambah fee krn ini total uang user yang dikeluarkan, di API otomastis berkurang.
 
     // akumulasi nominal ke bulan yang sesuai
-    nominalPengeluaranPerBulan[bulan] += curr.nominal;
+    nominalPengeluaranPerBulan[bulan] += nominalTanpaiFee;
   });
 
   const dataPengeluaranPerbulan = Object.values(nominalPengeluaranPerBulan)
@@ -58,8 +58,8 @@ const Dashboard = () => {
   danaInovasiUserINI?.forEach(masuk => {
     masuk.supports.forEach(supp => {
       const bulan = new Date(supp.createdAt).getMonth() + 1
-      const nominalKurangiFee = supp.nominal - supp.fee;
-      nominalPendapatanPerBulan[bulan] += nominalKurangiFee
+     // const nominalKurangiFee = supp.nominal - supp.fee;
+      nominalPendapatanPerBulan[bulan] += supp.nominal // di API uang donasi otomatis dipotong.
     })
   })
 

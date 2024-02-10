@@ -37,7 +37,7 @@ const SidebarDashboard = ({ openMenu }) => {
     Cookies.remove('responLogin')
     setTimeout(() => {
       window.location.href = '/';
-    }, 2500)
+    }, 2000)
   }
 
   return (

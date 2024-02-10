@@ -26,7 +26,7 @@ const Cardinovasi = ({ addLocation, addButton, linkButton, handleButton, image,
             <div>
               <Link to={`${linkButton}`}>
                 <button onClick={handleButton} className='bg-green-900 h-10 w-full rounded-lg py-4 px-3.5 text-white text-sm font-semibold flex items-center justify-center gap-3'>
-                  <p>Berikan Inoformasi Terbaru</p>
+                  <p>Berikan Informasi Terbaru</p>
                   <img src="/Arrow-right.svg" alt="" />
                 </button>
               </Link>
@@ -37,7 +37,7 @@ const Cardinovasi = ({ addLocation, addButton, linkButton, handleButton, image,
         {addLocation ? (
           <div className='flex bg-green-900 text-white gap-1 px-6 py-3 rounded-b-xl'>
             <img src="PinMap.svg" alt="" srcset="" />
-            <p className='text-base font-normal line-clamp-2 xl:line-clamp-1'>{kota}, {propinsi}</p>
+            <p className='text-base font-normal line-clamp-2 xl:line-clamp-1'>{kota || 'Indonesia'}, {propinsi}</p>
           </div>
         ) : (<div></div>)}
       </div>

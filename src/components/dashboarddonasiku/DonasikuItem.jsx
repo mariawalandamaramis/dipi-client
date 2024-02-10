@@ -17,7 +17,7 @@ const DonasikuItem = () => {
     // mendapatkan data yang cuma di dukung user ini, LOL.
     const yangDidukungUserINI = yangDidukung.filter(item => item.giver_id === userId);
 
-    // console.log(yangDidukungUserINI)
+    console.log(yangDidukungUserINI)
     // console.log(yangDidukung) // user lain ikutan ke get, LOL.
 
     useEffect(() => {
@@ -112,7 +112,8 @@ const DonasikuItem = () => {
                                             <p>Nominal dukungan</p>
                                         </div>
                                         <div className="text-base font-semibold tracking-normal leading-6">
-                                            <p>{project.nominal.toLocaleString('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 })}</p>
+                                            {/* penyesuaian history dukungan, di API nominalnya 49.000 fee 1.000, tapi ui user bayarnya 50.000 */}
+                                            <p>{(project.nominal + 1000).toLocaleString('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 })}</p>
                                         </div>
                                     </div>
                                 </div>
