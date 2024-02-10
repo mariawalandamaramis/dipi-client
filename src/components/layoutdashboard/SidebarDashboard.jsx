@@ -1,9 +1,44 @@
+import Cookies from 'js-cookie'
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 
 const SidebarDashboard = ({ openMenu }) => {
-  const [activeMenu, setActiveMenu] = useState('/dashboard')
+  const location = useLocation()
+  const [activeMenu, setActiveMenu] = useState(location.pathname)
   const handleBackgroundMenu = (menu) => { setActiveMenu(menu) }
+
+  const alertLogout = () => {
+    withReactContent(Swal).fire({
+      title: "Yakin Ingin Logout ?",
+      text: "Kamu tidak akan bisa mengakses halaman ini lagi!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Ya, Logout!",
+      cancelButtonText: "Ga jadi"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: "Berhasil Logout",
+          text: "Sampai jumpa lagi!",
+          icon: "success",
+          showConfirmButton: false,
+          timer: 1500
+        });
+      }
+    })
+  }
+
+  const handleLogout = () => {
+    alertLogout()
+    Cookies.remove('responLogin')
+    setTimeout(() => {
+      window.location.href = '/';
+    }, 2000)
+  }
 
   return (
     <>
@@ -63,7 +98,7 @@ const SidebarDashboard = ({ openMenu }) => {
           </div>
 
 
-          <button className='flex p-3 w-full border-t-2'>
+          <button onClick={handleLogout} className='flex p-3 w-full border-t-2'>
             <div className='flex gap-3'>
               <img src="/bx_log-out.svg" alt="" />
               <p className='text-white text-base font-semibold'>Logout</p>
