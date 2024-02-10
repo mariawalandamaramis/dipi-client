@@ -155,7 +155,7 @@ const Formstep1 = ({ register, errors, setValue, getValues, errInputFile }) => {
             required: ' Pilih salah satu kategori ! '
           })}
             className="rounded-md border-2 p-2 text-xs w-full">
-            <option value="" disabled selected hidden>Pilih katergori Inovasi</option>
+            <option value="" disabled selected hidden>Pilih Kategori Inovasi</option>
             {kategori?.length > 0 ? (
               kategori.map(pilih => (
                 <option key={pilih.id} value={pilih.id}>{pilih.category_name}</option>

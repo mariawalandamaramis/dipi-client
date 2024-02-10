@@ -14,20 +14,20 @@ const Calltoaction = () => {
 
           <div className='relative w-full h-40 sm:h-80 lg:h-96 overflow-hidden'>
             <div className='absolute flex md:flex-wrap md:space-y-2 gap-3 md:gap-0 w-3/4 sm:w-1/2 md:w-1/2 md:px-2 top-10 animate-slideleft md:animate-slidedown'>
-              <img className='rounded-lg' src="Hero.png" alt="" srcSet="" />
-              <img className='rounded-lg' src="Hero.png" alt="" srcSet="" />
-              <img className='rounded-lg' src="Hero.png" alt="" srcSet="" />
-              <img className='rounded-lg' src="Hero.png" alt="" srcSet="" />
-              <img className='rounded-lg' src="Hero.png" alt="" srcSet="" />
-              <img className='rounded-lg' src="Hero.png" alt="" srcSet="" />
+              <img className='rounded-lg' src="./project/acara/budaya/budaya.jpg" alt="" srcSet="" />
+              <img className='rounded-lg' src="./project/digital/femalegeek/blind-coding1.jpg" alt="" srcSet="" />
+              <img className='rounded-lg' src="./project/digital/kursusonline/kursus-online-terbaik-bersertifikat.jpg" alt="" srcSet="" />
+              <img className='rounded-lg' src="./project/kerajinan/limbah-kertas-koran/tas.png" alt="" srcSet="" />
+              <img className='rounded-lg' src="./project/kerajinan/tas-rajut/perempuan-disabilitas-tas-rajut.jpg" alt="" srcSet="" />
+              <img className='rounded-lg' src="./project/makanandanminuman/catering-sehat.jpg" alt="" srcSet="" />
             </div>
             <div className='absolute hidden md:flex flex-wrap space-y-2 w-1/2 px-2 right-0 animate-slideup'>
-              <img className='rounded-lg' src="Hero.png" alt="" srcSet="" />
-              <img className='rounded-lg' src="Hero.png" alt="" srcSet="" />
-              <img className='rounded-lg' src="Hero.png" alt="" srcSet="" />
-              <img className='rounded-lg' src="Hero.png" alt="" srcSet="" />
-              <img className='rounded-lg' src="Hero.png" alt="" srcSet="" />
-              <img className='rounded-lg' src="Hero.png" alt="" srcSet="" />
+              <img className='rounded-lg' src="./project/kerajinan/makrame/makrame-2.jpg" alt="" srcSet="" />
+              <img className='rounded-lg' src="./project/limbah-kertas-koran/perempuan-dompet" alt="" srcSet="" />
+              <img className='rounded-lg' src="./project/acara/budaya/budaya.jpg" alt="" srcSet="" />
+              <img className='rounded-lg' src="./project/digital/kursusonline/kursus-online-terbaik-bersertifikat(2).jpg" alt="" srcSet="" />
+              <img className='rounded-lg' src="./project/kerajinan/limbah-kertas-koran/vas-bunga.png" alt="" srcSet="" />
+              <img className='rounded-lg' src="./project/digital/femalegeek/femalegeek-profile.jpg" alt="" srcSet="" />
             </div>
           </div>
 

@@ -15,11 +15,12 @@ const Footer = () => {
           </div>
           <div>
             <ul className='flex gap-2'>
-              <li><img src="/Facebook.svg" alt="" srcSet="" /></li>
-              <li><img src="/Facebook.svg" alt="" srcSet="" /></li>
-              <li><img src="/Facebook.svg" alt="" srcSet="" /></li>
-              <li><img src="/Facebook.svg" alt="" srcSet="" /></li>
-              <li><img src="/Facebook.svg" alt="" srcSet="" /></li>
+              
+              <li><button><img src="/Facebook.svg" alt="" srcSet="" /></button></li>
+              <li><button><img src="/twitter.svg" alt="" srcSet="" /></button></li>
+              <li><button><img src="/instagram.svg" alt="" srcSet="" /></button></li>
+              <li><button><img src="/linkedin.svg" alt="" srcSet="" /></button></li>
+              
             </ul>
           </div>
         </div>
