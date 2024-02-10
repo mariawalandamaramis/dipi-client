@@ -93,9 +93,11 @@ const DashboardProfileItem = () => {
   }
 
   const handleSubmitProfile = () => {
-    console.log(postToApi)
+    // console.log(postToApi)
     if (Object.keys(postToApi).length === 5) {
-      dispatch(putUpdateProfile(postToApi, userId))
+      console.log('disini')
+      console.log(postToApi)
+      dispatch(putUpdateProfile(postToApi))
     } else {
       alertFail()
     }

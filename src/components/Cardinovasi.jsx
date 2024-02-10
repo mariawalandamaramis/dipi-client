@@ -37,7 +37,7 @@ const Cardinovasi = ({ addLocation, addButton, linkButton, handleButton, image,
         {addLocation ? (
           <div className='flex bg-green-900 text-white gap-1 px-6 py-3 rounded-b-xl'>
             <img src="PinMap.svg" alt="" srcset="" />
-            <p className='text-base font-normal line-clamp-2 xl:line-clamp-1'>{kota || 'Indonesia'}, {propinsi}</p>
+            <p className='text-base font-normal line-clamp-2 xl:line-clamp-1'>{kota}, {propinsi}</p>
           </div>
         ) : (<div></div>)}
       </div>

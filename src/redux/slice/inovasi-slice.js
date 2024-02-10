@@ -48,7 +48,7 @@ export default inovasiSlice.reducer
 
 export const getSemuaInovasiAPI = async (dispatch) => {
     try {
-        const getRespon = await fetch('https://nice-cowboy-boots-pike.cyclic.app/inovation')
+        const getRespon = await fetch(import.meta.env.VITE_APIINOVATION)
         const result = await getRespon.json()
         dispatch(getSemuaInovasi(result.data))
 
@@ -59,7 +59,7 @@ export const getSemuaInovasiAPI = async (dispatch) => {
 
 export const getKategoriAPI = async (dispatch) => {
     try {
-        const getRespon = await fetch('https://nice-cowboy-boots-pike.cyclic.app/category')
+        const getRespon = await fetch(import.meta.env.VITE_APICATEGORY)
         const result = await getRespon.json()
         dispatch(getKategori(result))
 
@@ -71,7 +71,7 @@ export const getKategoriAPI = async (dispatch) => {
 export const getInovasiByIdAPI = (id) => {
     return async (dispatch) => {
         try {
-            const getRespon = await fetch(`https://nice-cowboy-boots-pike.cyclic.app/inovation/${id}`)
+            const getRespon = await fetch(`${import.meta.env.VITE_APIINOVATION}${id}`)
             const result = await getRespon.json()
             dispatch(getInovasiById(result))
 
@@ -84,7 +84,7 @@ export const getInovasiByIdAPI = (id) => {
 export const getArtikelAPI = (id) => {
     return async (dispatch) => {
         try {
-            const getRespon = await fetch(`https://nice-cowboy-boots-pike.cyclic.app/article?inovation_id=${id}`)
+            const getRespon = await fetch(`${import.meta.env.VITE_APIARTICLE_GET_BYIDINOV}${id}`)
             const result = await getRespon.json()
             dispatch(getArtikel(result))
 
@@ -97,7 +97,7 @@ export const getArtikelAPI = (id) => {
 export const getOpsiDukunganAPI = (id) => {
     return async (dispatch) => {
         try {
-            const getRespon = await fetch(`https://nice-cowboy-boots-pike.cyclic.app/package?inovation_id=${id}`)
+            const getRespon = await fetch(`${import.meta.env.VITE_APIPACKAGE_GET_BYIDINOV}${id}`)
             const result = await getRespon.json()
             dispatch(getOpsiDukungan(result))
 
@@ -109,7 +109,7 @@ export const getOpsiDukunganAPI = (id) => {
 
 export const getUsersAPI = async (dispatch) => {
     try {
-        const getRespon = await fetch(`https://nice-cowboy-boots-pike.cyclic.app/users`)
+        const getRespon = await fetch(`${import.meta.env.VITE_APIUSERS}`)
         const result = await getRespon.json()
         dispatch(getUsers(result))
 
@@ -121,7 +121,7 @@ export const getUsersAPI = async (dispatch) => {
 
 export const getLokasiAPI = async (dispatch) => {
     try {
-        const getRespon = await fetch(`https://nice-cowboy-boots-pike.cyclic.app/cities`)
+        const getRespon = await fetch(`${import.meta.env.VITE_APILOCATION}`)
 
         if (getRespon.ok) {
             const result = await getRespon.json()
@@ -140,7 +140,7 @@ export const getDanaDukunganByInov = () => async (dispatch) => {
         var myHeaders = new Headers();
         myHeaders.append("Authorization", token)
 
-        const getRespon = await fetch('https://nice-cowboy-boots-pike.cyclic.app/support/getbyinovation', {
+        const getRespon = await fetch(`${import.meta.env.VITE_APISUPPORT_GET_BYINO}`, {
             method: 'GET',
             headers: myHeaders
         })

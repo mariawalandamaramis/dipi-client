@@ -61,12 +61,12 @@ function Detail() {
     fotoUser[user.id] = user.profile
   })
 
-  console.log(inovasiById)
+  //console.log(inovasiById)
 
   // menampilkan nama kota dari city_id yang didpt dari getInovation
   const namaKota = {}
   semuaLokasi.data?.forEach(user => {
-    namaKota[user.city_id] = user.city_name
+    namaKota[user.city_id] = user.name
   })
 
   // menampilkan nama propinsi dari province_id yang didpt dari getInovation
@@ -109,7 +109,7 @@ function Detail() {
           </div>
           <div className='flex gap-2'>
             <img src="/PinMap_green.svg" alt="" srcset="" />
-            <p className='text-base font-normal text-green-900'>{namaKota[inovasiById?.city_id] || 'Indonesia'}, {namaPropinsi[inovasiById?.province_id]}</p>
+            <p className='text-base font-normal text-green-900'>{namaKota[inovasiById?.province_id] || 'Indonesia'}, {namaPropinsi[inovasiById?.province_id]}</p>
           </div>
           <Link to={`dukungan`}>
             <button className="bg-green-900 w-full rounded py-2 px-3.5 text-white text-md font-semibold flex items-center justify-center gap-3">

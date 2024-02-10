@@ -43,7 +43,7 @@ export const postImageAPI = (imgFile) => {
     try {
       const formData = new FormData();
       formData.append("file", imgFile[0], imgFile[0].name)
-      const postRespon = await fetch('https://nice-cowboy-boots-pike.cyclic.app/inovation/uploadImage', {
+      const postRespon = await fetch(`${import.meta.env.VITE_APIINOVATION_UPLOAD_IMAGE}`, {
         method: 'POST',
         body: formData
       })
@@ -68,7 +68,7 @@ export const postVideoAPI = (videoFile) => {
     try {
       const formData = new FormData();
       formData.append("video", videoFile[0], videoFile[0].name)
-      const postRespon = await fetch('https://nice-cowboy-boots-pike.cyclic.app/inovation/uploadvideo', {
+      const postRespon = await fetch(`${import.meta.env.VITE_APIINOVATION_UPLOAD_VIDEO}`, {
         method: 'POST',
         body: formData
       })
@@ -90,7 +90,7 @@ export const postVideoAPI = (videoFile) => {
 
 export const getLokasiAPI = async (dispatch) => {
   try {
-    const getRespon = await fetch(`https://nice-cowboy-boots-pike.cyclic.app/cities`)
+    const getRespon = await fetch(`${import.meta.env.VITE_APILOCATION}`)
 
     if (getRespon.ok) {
       const result = await getRespon.json()
@@ -104,7 +104,7 @@ export const getLokasiAPI = async (dispatch) => {
 
 export const getKategoriAPI = async (dispatch) => {
   try {
-    const getRespon = await fetch(`https://nice-cowboy-boots-pike.cyclic.app/category`)
+    const getRespon = await fetch(`${import.meta.env.VITE_APICATEGORY}`)
 
     if (getRespon.ok) {
       const result = await getRespon.json()
@@ -126,7 +126,6 @@ export const postAjukanInovasiCompleted = (dataWithoutImgVid) => {
 
       const currentState = getState()
       const allStateHere = currentState.ajukanInovasi // akses satet disini
-      const APIURL_INOVASI = 'https://nice-cowboy-boots-pike.cyclic.app/inovation'
       const token = JSON.parse(Cookies.get('responLogin')).token
 
       const readyInovasiToPost = {
@@ -146,7 +145,7 @@ export const postAjukanInovasiCompleted = (dataWithoutImgVid) => {
 
       console.log(JSON.stringify(readyInovasiToPost))
 
-      const postResponInovasi = await fetch(APIURL_INOVASI, {
+      const postResponInovasi = await fetch(`${import.meta.env.VITE_APIINOVATION}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

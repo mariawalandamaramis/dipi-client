@@ -40,7 +40,8 @@ const Spillcardinovasi = () => {
   // menampilkan nama kota dari city_id yang didpt dari getInovation
   const namaKota = {}
   semuaLokasi.data?.forEach(user => {
-    namaKota[user.city_id] = user.city_name
+    // console.log(user)
+    namaKota[user.province_id] = user.name
   })
 
   // menampilkan nama propinsi dari province_id yang didpt dari getInovation
@@ -96,7 +97,7 @@ const Spillcardinovasi = () => {
               user_name={namaUser[data.user_id]}
               time={sisaHari(data.duration, data.createdAt)}
               persenTarget={persenTarget(data.amount, data.total_support)}
-              kota={namaKota[data.city_id]}
+              kota={namaKota[data.province_id]}
               propinsi={namaPropinsi[data.province_id]}
             />
           ))}

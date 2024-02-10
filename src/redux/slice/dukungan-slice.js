@@ -31,7 +31,7 @@ export const postDukunganAPI = (data) => async (dispatch) => {
 
         console.log(data)
 
-        const postRespon = await fetch('https://nice-cowboy-boots-pike.cyclic.app/support', {
+        const postRespon = await fetch(`${import.meta.env.VITE_APISUPPORT_CREATE}`, {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json", // tambahhh iniii biar ga 404 not found
@@ -60,7 +60,7 @@ export const getYangDidukungAPI = () => async (dispatch) => {
         var myHeaders = new Headers();
         myHeaders.append("Authorization", token)
 
-        const getRespon = await fetch('https://nice-cowboy-boots-pike.cyclic.app/support/getbygiver', {
+        const getRespon = await fetch(`${import.meta.env.VITE_APISUPPORT_GET_BYGIVER}`, {
             method: 'GET',
             headers: myHeaders
         })
@@ -80,7 +80,7 @@ export const getYangDidukungAPI = () => async (dispatch) => {
 export const getPaketYangDidukungAPI = (id) => {
     return async (dispatch) => {
         try {
-            const getRespon = await fetch(`https://nice-cowboy-boots-pike.cyclic.app/package?inovation_id=${id}`)
+            const getRespon = await fetch(`${import.meta.env.VITE_APIPACKAGE_GET_BYIDINOV}${id}`)
             const result = await getRespon.json()
             // console.log(result)
            dispatch(getPaketYangDidukung(result.data))

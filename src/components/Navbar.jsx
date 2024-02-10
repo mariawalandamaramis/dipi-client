@@ -45,7 +45,7 @@ function Navbar() {
               Cookies.get('responLogin') ? (
                 <Link to={'/dashboard'}>
                   <div className='w-10 md:w-10 h-10 md:h-10'>
-                    <img className='w-full h-full rounded-full object-cover' src={user?.profile || "BlankData.jpg"} alt="" srcset="" />
+                    <img className='w-full h-full rounded-full object-cover' src={user?.profile || "/BlankData.jpg"} alt="" srcset="" />
                   </div>
                 </Link>
               ) : (

@@ -15,7 +15,7 @@ const registerSlice = createSlice({
 
 export const postRegister = (data) => async (dispacth) => {
     try {
-        const postRegister = await fetch('https://nice-cowboy-boots-pike.cyclic.app/users/register', {
+        const postRegister = await fetch(`${import.meta.env.VITE_APIUSERS_REGISTER}`, {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",

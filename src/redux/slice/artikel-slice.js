@@ -24,7 +24,7 @@ export const PostArtikelAPi = (data) => async (dispatch) => {
     try {
         const token = JSON.parse(Cookies.get('responLogin')).token
 
-        const postRespon = await fetch(`https://nice-cowboy-boots-pike.cyclic.app/article`, {
+        const postRespon = await fetch(`${import.meta.env.VITE_APIARTICLE_CREATE}`, {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",
@@ -51,7 +51,7 @@ export const PostArtikelAPi = (data) => async (dispatch) => {
 export const getArtikelByIdInovAPI = (id) => {
     return async (dispatch) => {
         try {
-            const getRespon = await fetch(`https://nice-cowboy-boots-pike.cyclic.app/article?inovation_id=${id}`)
+            const getRespon = await fetch(`${import.meta.env.VITE_APIARTICLE_GET_BYIDINOV}${id}`)
             const result = await getRespon.json()
             dispatch(semuaArtikel(result))
 

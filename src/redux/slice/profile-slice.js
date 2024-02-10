@@ -31,7 +31,7 @@ export default profilSlice.reducer
 export const getUserByIdAPI = (id) => {
     return async (dispatch) => {
         try {
-            const getRespon = await fetch(`https://nice-cowboy-boots-pike.cyclic.app/users/${id}`)
+            const getRespon = await fetch(`${import.meta.env.VITE_APIUSERS}${id}`)
             const result = await getRespon.json()
             dispatch(getUserById(result))
 
@@ -43,7 +43,7 @@ export const getUserByIdAPI = (id) => {
 
 export const getLokasiAPI = async (dispatch) => {
     try {
-        const getRespon = await fetch(`https://nice-cowboy-boots-pike.cyclic.app/cities`)
+        const getRespon = await fetch(`${import.meta.env.VITE_APILOCATION}`)
 
         if (getRespon.ok) {
             const result = await getRespon.json()
@@ -55,7 +55,7 @@ export const getLokasiAPI = async (dispatch) => {
     }
 }
 
-export const putUpdateProfile = (bodyReq, id) => {
+export const putUpdateProfile = (bodyReq) => {
     return async (dispatch) => {
         try {
 
@@ -69,7 +69,7 @@ export const putUpdateProfile = (bodyReq, id) => {
             formData.append('phone', bodyReq.phone)
 
 
-            const putRespon = await fetch(`https://nice-cowboy-boots-pike.cyclic.app/users/${id}`, {
+            const putRespon = await fetch(`${import.meta.env.VITE_APIUSERS}`, {
                 method: 'PUT',
                 headers: {
                     // "Content-Type": "application/json",
@@ -77,6 +77,8 @@ export const putUpdateProfile = (bodyReq, id) => {
                 },
                 body: formData
             })
+
+            console.log(putRespon)
 
             if (putRespon.ok) {
                 const resultPut = await putRespon.json()
@@ -96,7 +98,7 @@ export const postImageAPI = (imgFile) => {
         try {
             const formData = new FormData();
             formData.append("file", imgFile, imgFile.name)
-            const postRespon = await fetch('https://nice-cowboy-boots-pike.cyclic.app/inovation/uploadImage', {
+            const postRespon = await fetch(`${import.meta.env.VITE_APIINOVATION_UPLOAD_IMAGE}`, {
                 method: 'POST',
                 body: formData
             })
